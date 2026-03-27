@@ -3,45 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>מנטר רכב v2</title>
+<title>יד2 Scout</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Heebo:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0d0d0d;
-  --surface: #161616;
-  --surface2: #1e1e1e;
-  --border: #2a2a2a;
-  --border2: #333;
-  --text: #e8e8e8;
-  --text2: #888;
-  --text3: #555;
-  --accent: #c8f04a;
-  --accent-dim: rgba(200,240,74,0.12);
-  --red: #ff4444;
-  --red-dim: rgba(255,68,68,0.12);
-  --yellow: #f0b429;
-  --yellow-dim: rgba(240,180,41,0.12);
-  --green: #4ade80;
-  --green-dim: rgba(74,222,128,0.1);
-  --mono: 'IBM Plex Mono', monospace;
-  --sans: 'Heebo', sans-serif;
+  --bg: #0d0d0d; --surface: #161616; --surface2: #1e1e1e; --surface3: #242424;
+  --border: #2a2a2a; --border2: #333;
+  --text: #e8e8e8; --text2: #888; --text3: #555;
+  --accent: #c8f04a; --accent-dim: rgba(200,240,74,0.12);
+  --red: #ff4444; --red-dim: rgba(255,68,68,0.12);
+  --yellow: #f0b429; --yellow-dim: rgba(240,180,41,0.12);
+  --green: #4ade80; --green-dim: rgba(74,222,128,0.1);
+  --mono: 'IBM Plex Mono', monospace; --sans: 'Heebo', sans-serif;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 14px; min-height: 100vh; }
-
-/* Layout */
-.app { display: grid; grid-template-columns: 320px 1fr; min-height: 100vh; }
-.sidebar { background: var(--surface); border-left: 1px solid var(--border); padding: 0; overflow-y: auto; display: flex; flex-direction: column; }
+.app { display: grid; grid-template-columns: 340px 1fr; min-height: 100vh; }
+.sidebar { background: var(--surface); border-left: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; }
 .main { padding: 24px; overflow-y: auto; }
 
-/* Header */
-.sidebar-header { padding: 20px 20px 16px; border-bottom: 1px solid var(--border); }
-.logo { font-family: var(--mono); font-size: 11px; color: var(--text3); letter-spacing: 0.1em; margin-bottom: 4px; text-transform: uppercase; }
-.logo-title { font-size: 18px; font-weight: 700; color: var(--text); letter-spacing: -0.02em; }
+.sidebar-header { padding: 18px 20px 14px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.logo { font-family: var(--mono); font-size: 10px; color: var(--text3); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 3px; }
+.logo-title { font-size: 20px; font-weight: 700; letter-spacing: -0.03em; }
 .logo-title span { color: var(--accent); }
-
-/* Status pill */
-.status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 20px; font-family: var(--mono); font-size: 11px; margin-top: 10px; }
+.status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 20px; font-family: var(--mono); font-size: 11px; margin-top: 8px; }
 .status-pill.idle { background: var(--surface2); color: var(--text3); border: 1px solid var(--border); }
 .status-pill.active { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(200,240,74,0.3); }
 .status-pill.scanning { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(240,180,41,0.3); }
@@ -49,886 +34,447 @@ body { background: var(--bg); color: var(--text); font-family: var(--sans); font
 .dot.pulse { animation: blink 1s infinite; }
 @keyframes blink { 0%,100%{opacity:1}50%{opacity:0.2} }
 
-/* Section */
-.section { padding: 16px 20px; border-bottom: 1px solid var(--border); }
-.section-label { font-family: var(--mono); font-size: 10px; color: var(--text3); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 12px; }
+.section { padding: 14px 20px; border-bottom: 1px solid var(--border); }
+.section-label { font-family: var(--mono); font-size: 10px; color: var(--text3); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px; }
 
-/* Fields */
-.field { margin-bottom: 10px; }
-.field label { display: block; font-size: 12px; color: var(--text2); margin-bottom: 4px; }
-.field input, .field select {
-  width: 100%; background: var(--surface2); border: 1px solid var(--border2); border-radius: 6px;
-  padding: 7px 10px; color: var(--text); font-family: var(--sans); font-size: 13px;
-  transition: border-color 0.15s;
-}
-.field input:focus, .field select:focus { outline: none; border-color: var(--accent); }
+.field { margin-bottom: 9px; }
+.field label { display: block; font-size: 12px; color: var(--text2); margin-bottom: 3px; }
+.field input { width: 100%; background: var(--surface2); border: 1px solid var(--border2); border-radius: 6px; padding: 7px 10px; color: var(--text); font-family: var(--sans); font-size: 13px; }
+.field input:focus { outline: none; border-color: var(--accent); }
 .field input::placeholder { color: var(--text3); }
-.range-row { display: grid; grid-template-columns: 1fr 18px 1fr; align-items: center; gap: 4px; }
+.range-row { display: grid; grid-template-columns: 1fr 16px 1fr; align-items: center; gap: 4px; }
 .range-row span { text-align: center; color: var(--text3); font-size: 12px; }
 
-/* Models list */
-.model-item { background: var(--surface2); border: 1px solid var(--border2); border-radius: 8px; margin-bottom: 8px; overflow: hidden; }
-.model-item-header { padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; cursor: default; }
-.model-item .model-name { font-weight: 500; font-size: 13px; }
-.model-item .model-sub { font-size: 11px; color: var(--text2); margin-top: 2px; font-family: var(--mono); }
-.model-actions { display: flex; gap: 4px; }
-.model-actions button { background: none; border: none; cursor: pointer; font-size: 14px; padding: 2px 5px; border-radius: 4px; transition: background 0.15s; }
-.edit-btn { color: var(--text3); }
-.edit-btn:hover { color: var(--accent); background: var(--accent-dim); }
-.del-btn { color: var(--text3); }
-.del-btn:hover { color: var(--red); background: var(--red-dim); }
-.model-params { border-top: 1px solid var(--border); padding: 10px 12px; display: none; }
-.model-params.open { display: block; }
-.model-params .field { margin-bottom: 8px; }
-.model-params label { display: block; font-size: 11px; color: var(--text3); margin-bottom: 3px; font-family: var(--mono); }
-.model-params input { width: 100%; background: var(--surface); border: 1px solid var(--border2); border-radius: 5px; padding: 5px 8px; color: var(--text); font-family: var(--sans); font-size: 12px; }
-.model-params input:focus { outline: none; border-color: var(--accent); }
-.model-params .range-row { display: grid; grid-template-columns: 1fr 14px 1fr; align-items: center; gap: 3px; }
-.model-params .range-row span { text-align: center; color: var(--text3); font-size: 11px; }
-.params-hint { font-size: 10px; color: var(--text3); font-family: var(--mono); margin-bottom: 8px; }
-.add-model-row { display: flex; gap: 6px; }
-.add-model-row input { flex: 1; }
-.btn-add { background: var(--accent-dim); border: 1px solid rgba(200,240,74,0.3); color: var(--accent); border-radius: 6px; padding: 7px 14px; cursor: pointer; font-family: var(--sans); font-size: 13px; white-space: nowrap; transition: background 0.15s; }
+.api-row { display: flex; gap: 6px; }
+.api-row input { flex: 1; background: var(--surface2); border: 1px solid var(--border2); border-radius: 6px; padding: 7px 10px; color: var(--text); font-family: var(--sans); font-size: 13px; }
+.api-row input:focus { outline: none; border-color: var(--accent); }
+.api-row input::placeholder { color: var(--text3); }
+.icon-btn { background: var(--surface2); border: 1px solid var(--border2); color: var(--text2); border-radius: 6px; padding: 0 10px; cursor: pointer; font-size: 14px; }
+.api-status { font-family: var(--mono); font-size: 11px; color: var(--text3); margin-top: 5px; }
+
+/* Car accordion */
+.cars-list { display: flex; flex-direction: column; gap: 5px; margin-bottom: 8px; }
+.car-card { background: var(--surface2); border: 1px solid var(--border2); border-radius: 8px; overflow: hidden; }
+.car-head { display: flex; align-items: center; gap: 8px; padding: 9px 12px; cursor: pointer; user-select: none; transition: background 0.15s; }
+.car-head:hover { background: var(--surface3); }
+.car-name { font-size: 13px; font-weight: 500; flex: 1; }
+.car-chevron { font-size: 9px; color: var(--text3); transition: transform 0.2s; }
+.car-card.open .car-chevron { transform: rotate(180deg); }
+.car-del { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 15px; padding: 0 3px; transition: color 0.15s; line-height: 1; }
+.car-del:hover { color: var(--red); }
+.override-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+.car-body { display: none; padding: 8px 12px 12px; border-top: 1px solid var(--border); }
+.car-card.open .car-body { display: block; }
+.params-hint { font-size: 11px; color: var(--text3); font-family: var(--mono); margin-bottom: 8px; }
+.car-body .field { margin-bottom: 7px; }
+.car-body .field label { font-size: 11px; }
+.car-body .field input { font-size: 12px; padding: 5px 8px; background: var(--surface); }
+
+.add-car-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 6px; }
+.add-car-row input { background: var(--surface2); border: 1px solid var(--border2); border-radius: 6px; padding: 7px 9px; color: var(--text); font-size: 13px; font-family: var(--sans); }
+.add-car-row input::placeholder { color: var(--text3); }
+.add-car-row input:focus { outline: none; border-color: var(--accent); }
+.btn-add { background: var(--accent-dim); border: 1px solid rgba(200,240,74,0.3); color: var(--accent); border-radius: 6px; padding: 7px 12px; cursor: pointer; font-size: 13px; font-family: var(--sans); }
 .btn-add:hover { background: rgba(200,240,74,0.2); }
 
-/* Scoring config */
-.score-row { display: grid; grid-template-columns: 1fr 60px 60px 60px; gap: 6px; align-items: center; margin-bottom: 8px; }
-.score-row .param-name { font-size: 12px; color: var(--text2); }
-.score-row input { background: var(--surface2); border: 1px solid var(--border2); border-radius: 5px; padding: 5px 6px; color: var(--text); font-family: var(--mono); font-size: 11px; text-align: center; width: 100%; }
-.score-row input:focus { outline: none; border-color: var(--accent); }
-.score-header { display: grid; grid-template-columns: 1fr 60px 60px 60px; gap: 6px; margin-bottom: 4px; }
-.score-header span { font-family: var(--mono); font-size: 10px; color: var(--text3); text-align: center; }
+/* Sliders */
+.score-param { margin-bottom: 14px; }
+.score-ph { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.score-ph .pl { font-size: 12px; color: var(--text2); }
+.ww { display: flex; align-items: center; gap: 4px; }
+.ww span { font-size: 11px; color: var(--text3); font-family: var(--mono); }
+.wi { width: 40px; background: var(--surface2); border: 1px solid var(--border2); border-radius: 5px; padding: 3px 4px; color: var(--text); font-family: var(--mono); font-size: 12px; text-align: center; }
+.wi:focus { outline: none; border-color: var(--accent); }
+.track { position: relative; height: 6px; background: var(--surface2); border-radius: 3px; margin: 10px 0 0; border: 1px solid var(--border); }
+.tf { position: absolute; top: 0; height: 100%; pointer-events: none; }
+.tf.g { background: var(--green); opacity: 0.5; }
+.tf.y { background: var(--yellow); opacity: 0.5; }
+.tf.r { background: var(--red); opacity: 0.45; }
+.thumb { position: absolute; top: 50%; transform: translate(-50%,-50%); width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--bg); cursor: grab; z-index: 3; }
+.thumb:active { cursor: grabbing; }
+.thumb.ty { background: var(--yellow); }
+.thumb.tr { background: var(--red); }
+.lbl-row { position: relative; height: 30px; margin-top: 5px; }
+.lbl { position: absolute; font-family: var(--mono); font-size: 10px; white-space: nowrap; transform: translateX(50%); transition: top 0.12s; top: 0; }
+.lbl.ly { color: var(--yellow); }
+.lbl.lr { color: var(--red); }
+.score-legend { font-size: 11px; color: var(--text3); margin-top: 6px; font-family: var(--mono); line-height: 1.8; }
 
-/* Buttons */
-.btn-primary { width: 100%; background: var(--accent); color: #000; border: none; border-radius: 8px; padding: 11px; font-family: var(--sans); font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity 0.15s; letter-spacing: 0.01em; }
+.btn-primary { width: 100%; background: var(--accent); color: #000; border: none; border-radius: 8px; padding: 11px; font-family: var(--sans); font-size: 14px; font-weight: 700; cursor: pointer; }
 .btn-primary:hover { opacity: 0.9; }
-.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
-.btn-stop { width: 100%; background: var(--red-dim); border: 1px solid rgba(255,68,68,0.3); color: var(--red); border-radius: 8px; padding: 10px; font-family: var(--sans); font-size: 14px; cursor: pointer; transition: background 0.15s; }
-.btn-stop:hover { background: rgba(255,68,68,0.2); }
-.btn-scan-now { width: 100%; background: var(--surface2); border: 1px solid var(--border2); color: var(--text2); border-radius: 8px; padding: 10px; font-family: var(--sans); font-size: 13px; cursor: pointer; margin-top: 8px; transition: border-color 0.15s; }
-.btn-scan-now:hover { border-color: var(--text2); color: var(--text); }
+.btn-stop { width: 100%; background: var(--red-dim); border: 1px solid rgba(255,68,68,0.3); color: var(--red); border-radius: 8px; padding: 10px; font-family: var(--sans); font-size: 14px; cursor: pointer; margin-top: 8px; }
+.btn-sec { width: 100%; background: var(--surface2); border: 1px solid var(--border2); color: var(--text2); border-radius: 8px; padding: 9px; font-family: var(--sans); font-size: 13px; cursor: pointer; margin-top: 8px; }
+.btn-sec:hover { border-color: var(--text2); color: var(--text); }
+.log-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; font-family: var(--mono); font-size: 11px; color: var(--text3); max-height: 70px; overflow-y: auto; margin-top: 10px; line-height: 1.7; }
 
-/* Main area */
-.main-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; }
-.main-title { font-size: 22px; font-weight: 700; letter-spacing: -0.03em; }
-.main-meta { font-family: var(--mono); font-size: 11px; color: var(--text3); }
+.main-title { font-size: 22px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 4px; }
+.main-meta { font-family: var(--mono); font-size: 11px; color: var(--text3); margin-bottom: 16px; }
+.filter-bar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.fchip { background: var(--surface); border: 1px solid var(--border2); color: var(--text2); border-radius: 20px; padding: 5px 14px; font-size: 12px; cursor: pointer; font-family: var(--mono); }
+.fchip.active { background: var(--accent-dim); border-color: rgba(200,240,74,0.4); color: var(--accent); }
 
-/* Filter bar */
-.filter-bar { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
-.filter-chip { background: var(--surface); border: 1px solid var(--border2); color: var(--text2); border-radius: 20px; padding: 5px 14px; font-size: 12px; cursor: pointer; transition: all 0.15s; font-family: var(--mono); }
-.filter-chip.active { background: var(--accent-dim); border-color: rgba(200,240,74,0.4); color: var(--accent); }
-.filter-chip:hover { border-color: var(--text3); }
-
-/* Result cards */
-.result-card {
-  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
-  padding: 16px 18px; margin-bottom: 12px; transition: border-color 0.2s;
-  position: relative; overflow: hidden;
-}
-.result-card::before { content: ''; position: absolute; top: 0; right: 0; width: 3px; height: 100%; }
-.result-card.score-high::before { background: var(--green); }
-.result-card.score-mid::before { background: var(--yellow); }
-.result-card.score-low::before { background: var(--red); }
-.result-card:hover { border-color: var(--border2); }
-.card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-.card-title { font-size: 15px; font-weight: 600; color: var(--text); }
-.card-model-tag { font-size: 11px; color: var(--text3); margin-top: 2px; font-family: var(--mono); }
-.score-display { text-align: center; }
-.score-num { font-family: var(--mono); font-size: 24px; font-weight: 500; line-height: 1; }
-.score-num.high { color: var(--green); }
-.score-num.mid { color: var(--yellow); }
-.score-num.low { color: var(--red); }
-.score-label { font-family: var(--mono); font-size: 10px; color: var(--text3); margin-top: 2px; }
-.card-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
-.chip { background: var(--surface2); border: 1px solid var(--border); color: var(--text2); border-radius: 6px; padding: 3px 9px; font-size: 12px; font-family: var(--mono); }
-.chip.warn { border-color: rgba(240,180,41,0.4); color: var(--yellow); background: var(--yellow-dim); }
-.chip.good { border-color: rgba(74,222,128,0.3); color: var(--green); background: var(--green-dim); }
-.card-notes { font-size: 12px; color: var(--text2); line-height: 1.6; border-top: 1px solid var(--border); padding-top: 10px; }
-.card-link { display: inline-block; margin-top: 8px; font-family: var(--mono); font-size: 11px; color: var(--accent); text-decoration: none; }
-.card-link:hover { text-decoration: underline; }
-.card-time { font-family: var(--mono); font-size: 10px; color: var(--text3); margin-top: 6px; }
-.new-badge { display: inline-block; background: var(--accent); color: #000; font-size: 10px; font-weight: 700; border-radius: 4px; padding: 1px 6px; margin-right: 8px; font-family: var(--mono); }
-
-/* Empty state */
-.empty { text-align: center; padding: 80px 0; color: var(--text3); }
-.empty-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.4; }
-.empty-text { font-family: var(--mono); font-size: 13px; }
-
-/* Log */
-.log-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-family: var(--mono); font-size: 11px; color: var(--text3); max-height: 80px; overflow-y: auto; margin-top: 12px; line-height: 1.7; }
-
-/* Notification */
-.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--accent); color: #000; padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 13px; z-index: 9999; transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1); pointer-events: none; }
+.rc { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; position: relative; overflow: hidden; }
+.rc::before { content:''; position:absolute; top:0; right:0; width:3px; height:100%; }
+.rc.high::before { background: var(--green); }
+.rc.mid::before { background: var(--yellow); }
+.rc.low::before { background: var(--red); }
+.rc-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+.rc-title { font-size: 15px; font-weight: 600; }
+.rc-tag { font-size: 11px; color: var(--text3); margin-top: 2px; font-family: var(--mono); }
+.snum { font-family: var(--mono); font-size: 22px; font-weight: 500; line-height: 1; }
+.snum.high{color:var(--green)} .snum.mid{color:var(--yellow)} .snum.low{color:var(--red)}
+.slbl { font-family: var(--mono); font-size: 10px; color: var(--text3); }
+.chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
+.ch { background: var(--surface2); border: 1px solid var(--border); color: var(--text2); border-radius: 5px; padding: 2px 8px; font-size: 12px; font-family: var(--mono); }
+.ch.g { background: var(--green-dim); border-color: rgba(74,222,128,0.3); color: var(--green); }
+.ch.w { background: var(--yellow-dim); border-color: rgba(240,180,41,0.4); color: var(--yellow); }
+.rc-notes { font-size: 12px; color: var(--text2); line-height: 1.6; border-top: 1px solid var(--border); padding-top: 8px; }
+.rc-link { display: inline-block; margin-top: 6px; font-family: var(--mono); font-size: 11px; color: var(--accent); text-decoration: none; }
+.rc-time { font-family: var(--mono); font-size: 10px; color: var(--text3); margin-top: 5px; }
+.nb { background: var(--accent); color: #000; font-size: 10px; font-weight: 700; border-radius: 3px; padding: 1px 5px; margin-left: 6px; font-family: var(--mono); }
+.empty { text-align: center; padding: 60px 0; color: var(--text3); }
+.empty-icon { font-size: 36px; margin-bottom: 10px; opacity: 0.4; }
+.empty-text { font-family: var(--mono); font-size: 12px; }
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(60px); background: var(--accent); color: #000; padding: 10px 22px; border-radius: 8px; font-weight: 600; font-size: 13px; z-index: 9999; transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); pointer-events: none; }
 .toast.show { transform: translateX(-50%) translateY(0); }
-
-/* Model params panel */
-.model-item { background: var(--surface2); border: 1px solid var(--border2); border-radius: 8px; margin-bottom: 8px; overflow: hidden; }
-.model-item-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; }
-.model-actions { display: flex; gap: 4px; }
-.edit-btn { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 14px; padding: 2px 6px; border-radius: 4px; transition: all 0.15s; }
-.edit-btn:hover { color: var(--accent); background: var(--accent-dim); }
-.del-btn { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 16px; padding: 0 4px; transition: color 0.15s; }
-.del-btn:hover { color: var(--red); }
-.model-params { max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.2s; padding: 0 12px; border-top: 0px solid var(--border); }
-.model-params.open { max-height: 400px; padding: 10px 12px; border-top: 1px solid var(--border); }
-.params-hint { font-size: 11px; color: var(--text3); font-family: var(--mono); margin-bottom: 8px; }
-.model-params .field { margin-bottom: 8px; }
-.model-params .field label { font-size: 11px; color: var(--text3); display: block; margin-bottom: 3px; }
-.model-params .range-row input { background: var(--surface); border: 1px solid var(--border2); border-radius: 5px; padding: 5px 7px; color: var(--text); font-size: 12px; font-family: var(--sans); width: 100%; }
-.model-params .range-row input:focus { outline: none; border-color: var(--accent); }
-.model-params input[type=text] { width: 100%; background: var(--surface); border: 1px solid var(--border2); border-radius: 5px; padding: 5px 7px; color: var(--text); font-size: 12px; font-family: var(--sans); }
-.model-params input[type=text]:focus { outline: none; border-color: var(--accent); }
-
-/* Scoring sliders */
-.score-param { margin-bottom: 18px; }
-.score-param-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.param-label { font-size: 12px; color: var(--text2); }
-.weight-input-wrap { display: flex; align-items: center; gap: 4px; }
-.weight-label { font-size: 11px; color: var(--text3); font-family: var(--mono); }
-.weight-input { width: 44px; background: var(--surface2); border: 1px solid var(--border2); border-radius: 5px; padding: 3px 5px; color: var(--text); font-family: var(--mono); font-size: 12px; text-align: center; }
-.weight-input:focus { outline: none; border-color: var(--accent); }
-.weight-pct { font-size: 11px; color: var(--text3); font-family: var(--mono); }
-.threshold-track-wrap { padding: 0 4px; }
-.threshold-track { position: relative; height: 6px; background: var(--surface2); border-radius: 3px; margin: 10px 0 4px; cursor: pointer; border: 1px solid var(--border); }
-.track-fill-green { position: absolute; top: 0; left: 0; height: 100%; background: var(--green); border-radius: 3px 0 0 3px; opacity: 0.5; pointer-events: none; }
-.track-fill-yellow { position: absolute; top: 0; height: 100%; background: var(--yellow); opacity: 0.5; pointer-events: none; }
-.track-fill-red { position: absolute; top: 0; height: 100%; background: var(--red); border-radius: 0 3px 3px 0; opacity: 0.4; pointer-events: none; }
-.thumb { position: absolute; top: 50%; transform: translate(-50%, -50%); width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--bg); cursor: grab; z-index: 2; transition: transform 0.1s; }
-.thumb:active { cursor: grabbing; transform: translate(-50%, -50%) scale(1.2); }
-.yellow-thumb { background: var(--yellow); }
-.red-thumb { background: var(--red); }
-.threshold-labels { position: relative; height: 30px; margin-top: 6px; }
-.threshold-labels span { font-family: var(--mono); font-size: 10px; position: absolute; white-space: nowrap; transition: top 0.15s; top: 0; transform: translateX(50%); }
-.tl-yellow { color: var(--yellow); }
-.tl-red { color: var(--red); }
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+::-webkit-scrollbar{width:3px} ::-webkit-scrollbar-track{background:transparent} ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 </style>
 </head>
 <body>
-
 <div class="toast" id="toast"></div>
-
 <div class="app">
 
-  <!-- SIDEBAR -->
-  <div class="sidebar">
-    <div class="sidebar-header">
-      <div class="logo">car monitor</div>
-      <div class="logo-title">יד<span>2</span> Scout</div>
-      <div class="status-pill idle" id="statusPill">
-        <div class="dot"></div>
-        <span id="statusText">כבוי</span>
-      </div>
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="logo">car monitor</div>
+    <div class="logo-title">יד<span>2</span> Scout</div>
+    <div class="status-pill idle" id="spill"><div class="dot" id="sdot"></div><span id="stxt">כבוי</span></div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">מפתח Gemini API</div>
+    <div class="api-row">
+      <input type="password" id="apiKey" placeholder="AIza..." oninput="onKey()"/>
+      <button class="icon-btn" onclick="toggleVis()">👁</button>
     </div>
+    <div class="api-status" id="apiSt">הכנס מפתח — <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--accent);text-decoration:none">קבל חינמי ←</a></div>
+  </div>
 
-    <!-- API KEY -->
-    <div class="section">
-      <div class="section-label">מפתח API</div>
-      <div class="field">
-        <label>Anthropic API Key</label>
-        <div style="display:flex;gap:6px;align-items:center">
-          <input type="password" id="apiKeyInput" placeholder="AIza..." style="flex:1" oninput="onApiKeyChange()" />
-          <button onclick="toggleApiVis()" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text2);border-radius:6px;padding:7px 10px;cursor:pointer;font-size:13px" id="visBtn">👁</button>
-        </div>
-      </div>
-      <div id="apiKeyStatus" style="font-family:var(--mono);font-size:11px;color:var(--text3);margin-top:4px">
-        הכנס מפתח להפעלה — <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--accent);text-decoration:none">קבל מפתח חינמי ←</a>
-      </div>
-    </div>
-
-    <!-- MODELS -->
-    <div class="section">
-      <div class="section-label">דגמים לחיפוש</div>
-      <div id="modelsList"></div>
-      <div class="add-model-row">
-        <input type="text" id="newMake" placeholder="יצרן" />
-        <input type="text" id="newModel" placeholder="דגם" />
-        <button class="btn-add" onclick="addModel()">+ הוסף</button>
-      </div>
-    </div>
-
-    <!-- SHARED PARAMS -->
-    <div class="section">
-      <div class="section-label">פרמטרים משותפים</div>
-      <div class="field">
-        <label>מחיר (₪)</label>
-        <div class="range-row">
-          <input type="number" id="priceMin" placeholder="מינימום" />
-          <span>—</span>
-          <input type="number" id="priceMax" placeholder="מקסימום" />
-        </div>
-      </div>
-      <div class="field">
-        <label>שנתון</label>
-        <div class="range-row">
-          <input type="number" id="yearMin" placeholder="מ-" />
-          <span>—</span>
-          <input type="number" id="yearMax" placeholder="עד" />
-        </div>
-      </div>
-      <div class="field">
-        <label>קילומטרז' (ק"מ)</label>
-        <div class="range-row">
-          <input type="number" id="kmMin" placeholder="מ-" />
-          <span>—</span>
-          <input type="number" id="kmMax" placeholder="עד" />
-        </div>
-      </div>
-      <div class="field">
-        <label>יד</label>
-        <div class="range-row">
-          <input type="number" id="handMin" placeholder="מ-" min="1" max="10" />
-          <span>—</span>
-          <input type="number" id="handMax" placeholder="עד" min="1" max="10" />
-        </div>
-      </div>
-      <div class="field">
-        <label>הערות / דרישות נוספות</label>
-        <input type="text" id="extraNotes" placeholder="אוטומטי, ללא תאונות, טסט תקין..." />
-      </div>
-    </div>
-
-    <!-- SCORING ENGINE -->
-    <div class="section">
-      <div class="section-label">מנוע ציון</div>
-
-      <!-- PRICE -->
-      <div class="score-param">
-        <div class="score-param-header">
-          <span class="param-label">מחיר (₪)</span>
-          <div class="weight-input-wrap">
-            <span class="weight-label">משקל</span>
-            <input type="number" id="w-price" value="35" min="0" max="100" class="weight-input" />
-            <span class="weight-pct">%</span>
-          </div>
-        </div>
-        <div class="threshold-track-wrap">
-          <div class="threshold-track" id="track-price">
-            <div class="track-fill-green" id="fill-green-price"></div>
-            <div class="track-fill-yellow" id="fill-yellow-price"></div>
-            <div class="track-fill-red" id="fill-red-price"></div>
-            <div class="thumb yellow-thumb" id="thumb-yellow-price" onmousedown="startDrag(event,'price','yellow')" ontouchstart="startDrag(event,'price','yellow')"></div>
-            <div class="thumb red-thumb" id="thumb-red-price" onmousedown="startDrag(event,'price','red')" ontouchstart="startDrag(event,'price','red')"></div>
-          </div>
-          <div class="threshold-labels">
-            <span class="tl-yellow" id="tv-yellow-price"></span>
-            <span class="tl-red" id="tv-red-price"></span>
-          </div>
-        </div>
-      </div>
-
-      <!-- KM -->
-      <div class="score-param">
-        <div class="score-param-header">
-          <span class="param-label">קילומטרז' (ק"מ)</span>
-          <div class="weight-input-wrap">
-            <span class="weight-label">משקל</span>
-            <input type="number" id="w-km" value="30" min="0" max="100" class="weight-input" />
-            <span class="weight-pct">%</span>
-          </div>
-        </div>
-        <div class="threshold-track-wrap">
-          <div class="threshold-track" id="track-km">
-            <div class="track-fill-green" id="fill-green-km"></div>
-            <div class="track-fill-yellow" id="fill-yellow-km"></div>
-            <div class="track-fill-red" id="fill-red-km"></div>
-            <div class="thumb yellow-thumb" id="thumb-yellow-km" onmousedown="startDrag(event,'km','yellow')" ontouchstart="startDrag(event,'km','yellow')"></div>
-            <div class="thumb red-thumb" id="thumb-red-km" onmousedown="startDrag(event,'km','red')" ontouchstart="startDrag(event,'km','red')"></div>
-          </div>
-          <div class="threshold-labels">
-            <span class="tl-yellow" id="tv-yellow-km"></span>
-            <span class="tl-red" id="tv-red-km"></span>
-          </div>
-        </div>
-      </div>
-
-      <!-- YEAR -->
-      <div class="score-param">
-        <div class="score-param-header">
-          <span class="param-label">שנתון</span>
-          <div class="weight-input-wrap">
-            <span class="weight-label">משקל</span>
-            <input type="number" id="w-year" value="20" min="0" max="100" class="weight-input" />
-            <span class="weight-pct">%</span>
-          </div>
-        </div>
-        <div class="threshold-track-wrap">
-          <div class="threshold-track" id="track-year">
-            <div class="track-fill-green" id="fill-green-year"></div>
-            <div class="track-fill-yellow" id="fill-yellow-year"></div>
-            <div class="track-fill-red" id="fill-red-year"></div>
-            <div class="thumb yellow-thumb" id="thumb-yellow-year" onmousedown="startDrag(event,'year','yellow')" ontouchstart="startDrag(event,'year','yellow')"></div>
-            <div class="thumb red-thumb" id="thumb-red-year" onmousedown="startDrag(event,'year','red')" ontouchstart="startDrag(event,'year','red')"></div>
-          </div>
-          <div class="threshold-labels">
-            <span class="tl-yellow" id="tv-yellow-year"></span>
-            <span class="tl-red" id="tv-red-year"></span>
-          </div>
-        </div>
-      </div>
-
-      <!-- HAND -->
-      <div class="score-param">
-        <div class="score-param-header">
-          <span class="param-label">יד (בעלות)</span>
-          <div class="weight-input-wrap">
-            <span class="weight-label">משקל</span>
-            <input type="number" id="w-hand" value="15" min="0" max="100" class="weight-input" />
-            <span class="weight-pct">%</span>
-          </div>
-        </div>
-        <div class="threshold-track-wrap">
-          <div class="threshold-track" id="track-hand">
-            <div class="track-fill-green" id="fill-green-hand"></div>
-            <div class="track-fill-yellow" id="fill-yellow-hand"></div>
-            <div class="track-fill-red" id="fill-red-hand"></div>
-            <div class="thumb yellow-thumb" id="thumb-yellow-hand" onmousedown="startDrag(event,'hand','yellow')" ontouchstart="startDrag(event,'hand','yellow')"></div>
-            <div class="thumb red-thumb" id="thumb-red-hand" onmousedown="startDrag(event,'hand','red')" ontouchstart="startDrag(event,'hand','red')"></div>
-          </div>
-          <div class="threshold-labels">
-            <span class="tl-yellow" id="tv-yellow-hand"></span>
-            <span class="tl-red" id="tv-red-hand"></span>
-          </div>
-        </div>
-      </div>
-
-      <div style="font-size:11px;color:var(--text3);margin-top:8px;line-height:1.6;font-family:var(--mono)">
-        <span style="color:var(--green)">■</span> אידיאלי &nbsp;
-        <span style="color:var(--yellow)">■</span> סף צהוב &nbsp;
-        <span style="color:var(--red)">■</span> קו אדום (פסילה)
-      </div>
-    </div>
-
-    <!-- INTERVAL -->
-    <div class="section">
-      <div class="section-label">תדירות סריקה</div>
-      <div class="field">
-        <label>סרוק כל (דקות)</label>
-        <input type="number" id="intervalMin" value="30" min="10" max="720" />
-      </div>
-    </div>
-
-    <!-- CONTROLS -->
-    <div class="section" style="margin-top:auto">
-      <button class="btn-primary" id="startBtn" onclick="startMonitor()">▶ התחל ניטור</button>
-      <button class="btn-stop" id="stopBtn" onclick="stopMonitor()" style="display:none; margin-top:8px">■ עצור ניטור</button>
-      <button class="btn-scan-now" onclick="runAllScans()">⟳ סרוק עכשיו</button>
-      <div class="log-box" id="logBox">ממתין...</div>
+  <div class="section">
+    <div class="section-label">רכבים לחיפוש</div>
+    <div class="cars-list" id="carsList"></div>
+    <div class="add-car-row">
+      <input type="text" id="nMake" placeholder="יצרן"/>
+      <input type="text" id="nModel" placeholder="דגם"/>
+      <button class="btn-add" onclick="addCar()">+ הוסף</button>
     </div>
   </div>
 
-  <!-- MAIN -->
-  <div class="main">
-    <div class="main-header">
-      <div>
-        <div class="main-title">תוצאות</div>
-        <div class="main-meta" id="mainMeta">לא בוצעה סריקה עדיין</div>
-      </div>
-    </div>
+  <div class="section">
+    <div class="section-label">מנוע ציון (גלובלי)</div>
+    <div id="sliders"></div>
+    <div class="score-legend"><span style="color:var(--green)">█</span> אידיאלי &nbsp;<span style="color:var(--yellow)">█</span> סף צהוב &nbsp;<span style="color:var(--red)">█</span> קו אדום (פסילה)</div>
+  </div>
 
-    <div class="filter-bar" id="filterBar">
-      <button class="filter-chip active" onclick="setFilter('all', this)">הכל</button>
-      <button class="filter-chip" onclick="setFilter('high', this)">■ התאמה גבוהה</button>
-      <button class="filter-chip" onclick="setFilter('mid', this)">■ בינוני</button>
-      <button class="filter-chip" onclick="setFilter('low', this)">■ נמוך</button>
-    </div>
+  <div class="section">
+    <div class="section-label">תדירות סריקה</div>
+    <div class="field"><label>סרוק כל (דקות)</label><input type="number" id="intMin" value="720" min="10" max="1440"/></div>
+  </div>
 
-    <div id="resultsList">
-      <div class="empty">
-        <div class="empty-icon">◉</div>
-        <div class="empty-text">הגדר דגמים והתחל ניטור</div>
-      </div>
-    </div>
+  <div class="section" style="margin-top:auto">
+    <button class="btn-primary" id="startBtn" onclick="startMonitor()">▶ התחל ניטור</button>
+    <button class="btn-stop" id="stopBtn" onclick="stopMonitor()" style="display:none">■ עצור ניטור</button>
+    <button class="btn-sec" onclick="runAll()">⟳ סרוק עכשיו</button>
+    <div class="log-box" id="logBox">ממתין...</div>
   </div>
 </div>
 
+<div class="main">
+  <div class="main-title">תוצאות</div>
+  <div class="main-meta" id="meta">לא בוצעה סריקה עדיין</div>
+  <div class="filter-bar">
+    <button class="fchip active" onclick="setF('all',this)">הכל</button>
+    <button class="fchip" onclick="setF('high',this)">התאמה גבוהה</button>
+    <button class="fchip" onclick="setF('mid',this)">בינוני</button>
+    <button class="fchip" onclick="setF('low',this)">נמוך</button>
+  </div>
+  <div id="results"><div class="empty"><div class="empty-icon">◉</div><div class="empty-text">הגדר רכבים והתחל ניטור</div></div></div>
+</div>
+
+</div>
 <script>
-// State
-let models = [];
-let sharedParams = {};
-let allResults = [];
-let seenIds = new Set();
-let intervalId = null;
-let activeFilter = 'all';
-let newResultsCount = 0;
-let scanCount = 0;
+// ── State ──
+let cars = [];
+let allResults = [], seenIds = new Set();
+let intervalId = null, activeFilter = 'all', scanCount = 0;
 
-function getApiKey() { return document.getElementById('apiKeyInput').value.trim(); }
-
-function onApiKeyChange() {
-  const key = getApiKey();
-  const status = document.getElementById('apiKeyStatus');
-  if (!key) {
-    status.innerHTML = 'הכנס מפתח להפעלה — <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--accent);text-decoration:none">קבל מפתח חינמי ←</a>';
-    status.style.color = 'var(--text3)';
-  } else if (key.length < 20) {
-    status.textContent = '⚠ מפתח לא נראה תקין';
-    status.style.color = 'var(--yellow)';
-  } else {
-    status.textContent = '✓ מפתח נטען';
-    status.style.color = 'var(--green)';
-  }
-  if (key) sessionStorage.setItem('gemini_key', key);
-}
-
-function toggleApiVis() {
-  const inp = document.getElementById('apiKeyInput');
-  inp.type = inp.type === 'password' ? 'text' : 'password';
-}
-
-// Defaults
-const DEFAULT_MODELS = [
-  { make: 'טויוטה', model: 'קורולה' }
+// ── Sliders ──
+const PARAMS = [
+  { id:'price', label:'מחיר (₪)',     min:0,    max:200000, step:5000, yv:120000, rv:160000, fmt:v=>(v/1000).toFixed(0)+'K₪',    isYear:false },
+  { id:'km',    label:'קילומטרז\'',   min:0,    max:300000, step:5000, yv:150000, rv:220000, fmt:v=>(v/1000).toFixed(0)+'K ק"מ', isYear:false },
+  { id:'year',  label:'שנתון',        min:2005, max:2025,   step:1,    yv:2017,   rv:2014,   fmt:v=>String(v),                   isYear:true  },
+  { id:'hand',  label:'יד',           min:1,    max:8,      step:1,    yv:3,      rv:5,      fmt:v=>'יד '+v,                     isYear:false },
 ];
 
-function init() {
-  models = [...DEFAULT_MODELS];
-  renderModels();
-  initSliders();
-  const saved = sessionStorage.getItem('gemini_key');
-  if (saved) { document.getElementById('apiKeyInput').value = saved; onApiKeyChange(); }
+function buildSliders() {
+  document.getElementById('sliders').innerHTML = PARAMS.map(p => `
+    <div class="score-param">
+      <div class="score-ph">
+        <span class="pl">${p.label}</span>
+        <div class="ww"><span>משקל</span><input type="number" class="wi" id="w-${p.id}" value="${p.id==='price'?35:p.id==='km'?30:p.id==='year'?20:15}" min="0" max="100"/><span>%</span></div>
+      </div>
+      <div class="track" id="track-${p.id}">
+        <div class="tf g" id="tg-${p.id}"></div>
+        <div class="tf y" id="ty-${p.id}"></div>
+        <div class="tf r" id="tr-${p.id}"></div>
+        <div class="thumb ty" id="thy-${p.id}" onmousedown="drag(event,'${p.id}','y')" ontouchstart="drag(event,'${p.id}','y')"></div>
+        <div class="thumb tr" id="thr-${p.id}" onmousedown="drag(event,'${p.id}','r')" ontouchstart="drag(event,'${p.id}','r')"></div>
+      </div>
+      <div class="lbl-row"><span class="lbl ly" id="lbly-${p.id}"></span><span class="lbl lr" id="lblr-${p.id}"></span></div>
+    </div>`).join('');
+  PARAMS.forEach(drawSlider);
 }
 
-function renderModels() {
-  const el = document.getElementById('modelsList');
-  if (models.length === 0) {
-    el.innerHTML = '<div style="color:var(--text3);font-size:12px;margin-bottom:10px;font-family:var(--mono)">אין דגמים עדיין</div>';
-    return;
+function getP(id){ return PARAMS.find(p=>p.id===id); }
+function pct(v,p){ return Math.max(0,Math.min(100,(v-p.min)/(p.max-p.min)*100)); }
+function fromPct(pc,p){ return Math.round((p.min+pc/100*(p.max-p.min))/p.step)*p.step; }
+
+function drawSlider(p) {
+  const ypc=pct(p.yv,p), rpc=pct(p.rv,p);
+  const lo=Math.min(ypc,rpc), hi=Math.max(ypc,rpc);
+  const setF=(id,css)=>document.getElementById(id).style.cssText=css;
+  if(p.isYear){
+    setF('tr-'+p.id,`left:0%;width:${lo}%;border-radius:3px 0 0 3px`);
+    setF('ty-'+p.id,`left:${lo}%;width:${hi-lo}%`);
+    setF('tg-'+p.id,`left:${hi}%;width:${100-hi}%;border-radius:0 3px 3px 0`);
+  } else {
+    setF('tg-'+p.id,`left:0%;width:${lo}%;border-radius:3px 0 0 3px`);
+    setF('ty-'+p.id,`left:${lo}%;width:${hi-lo}%`);
+    setF('tr-'+p.id,`left:${hi}%;width:${100-hi}%;border-radius:0 3px 3px 0`);
   }
-  el.innerHTML = models.map((m, i) => {
-    const p = m.params || {};
-    const hasOverride = m.params && Object.values(m.params).some(v => v !== '' && v !== undefined);
-    return `
-    <div class="model-item" id="model-item-${i}">
-      <div class="model-item-header">
-        <div>
-          <div class="model-name">${m.make} ${m.model} ${hasOverride ? '<span style="color:var(--accent);font-size:10px;font-family:var(--mono)">✎</span>' : ''}</div>
-        </div>
-        <div class="model-actions">
-          <button class="edit-btn" onclick="toggleModelParams(${i})" title="עריכת פרמטרים">✎</button>
-          <button class="del-btn" onclick="removeModel(${i})" title="מחק">×</button>
-        </div>
+  document.getElementById('thy-'+p.id).style.left=ypc+'%';
+  document.getElementById('thr-'+p.id).style.left=rpc+'%';
+  const yl=document.getElementById('lbly-'+p.id), rl=document.getElementById('lblr-'+p.id);
+  yl.style.left=ypc+'%'; yl.textContent=p.fmt(p.yv);
+  rl.style.left=rpc+'%'; rl.textContent=p.fmt(p.rv);
+  const dist=Math.abs(ypc-rpc);
+  yl.style.top='0px';
+  rl.style.top=dist<15?'15px':'0px';
+}
+
+let dragging=null;
+function drag(e,id,t){ e.preventDefault(); dragging={id,t}; document.addEventListener('mousemove',onDrag); document.addEventListener('mouseup',stopDrag); document.addEventListener('touchmove',onDrag,{passive:false}); document.addEventListener('touchend',stopDrag); }
+function onDrag(e){ if(!dragging)return; e.preventDefault(); const {id,t}=dragging; const p=getP(id); const rect=document.getElementById('track-'+id).getBoundingClientRect(); const cx=e.touches?e.touches[0].clientX:e.clientX; const pc=Math.max(0,Math.min(100,(rect.right-cx)/rect.width*100)); p[t+'v']=fromPct(pc,p); drawSlider(p); }
+function stopDrag(){ dragging=null; document.removeEventListener('mousemove',onDrag); document.removeEventListener('mouseup',stopDrag); document.removeEventListener('touchmove',onDrag); document.removeEventListener('touchend',stopDrag); }
+
+function getScoring(){
+  const r={};
+  PARAMS.forEach(p=>{ r[p.id]={weight:+(document.getElementById('w-'+p.id).value||0), yellow:p.yv, red:p.rv}; });
+  return r;
+}
+
+// ── API Key ──
+function getKey(){ return document.getElementById('apiKey').value.trim(); }
+function onKey(){
+  const k=getKey(), el=document.getElementById('apiSt');
+  if(!k){ el.innerHTML='הכנס מפתח — <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--accent);text-decoration:none">קבל חינמי ←</a>'; el.style.color='var(--text3)'; }
+  else if(k.length<20){ el.textContent='⚠ לא נראה תקין'; el.style.color='var(--yellow)'; }
+  else { el.textContent='✓ מפתח נטען'; el.style.color='var(--green)'; sessionStorage.setItem('gk',k); }
+}
+function toggleVis(){ const i=document.getElementById('apiKey'); i.type=i.type==='password'?'text':'password'; }
+
+// ── Cars ──
+function renderCars(){
+  const el=document.getElementById('carsList');
+  if(!cars.length){ el.innerHTML='<div style="color:var(--text3);font-size:12px;font-family:var(--mono);margin-bottom:4px">אין רכבים עדיין</div>'; return; }
+  el.innerHTML=cars.map((c,i)=>{
+    const has=c.params&&Object.values(c.params).some(v=>v!==''&&v!=null);
+    const p=c.params||{};
+    return `<div class="car-card${c._open?' open':''}" id="cc${i}">
+      <div class="car-head" onclick="toggleCar(${i})">
+        ${has?'<div class="override-dot"></div>':''}
+        <div class="car-name">${c.make} ${c.model}</div>
+        <span class="car-chevron">▼</span>
+        <button class="car-del" onclick="event.stopPropagation();delCar(${i})">×</button>
       </div>
-      <div class="model-params" id="model-params-${i}">
-        <div class="params-hint">ריק = ישתמש בפרמטרים המשותפים</div>
-        <div class="field">
-          <label>מחיר (₪)</label>
+      <div class="car-body">
+        <div class="params-hint">ריק = ברירות מחדל משותפות</div>
+        <div class="field"><label>מחיר (₪)</label>
           <div class="range-row">
-            <input type="number" placeholder="מינימום" value="${p.priceMin||''}" onchange="setModelParam(${i},'priceMin',this.value)" />
+            <input type="number" placeholder="מינימום" value="${p.priceMin||''}" oninput="sp(${i},'priceMin',this.value)"/>
             <span>—</span>
-            <input type="number" placeholder="מקסימום" value="${p.priceMax||''}" onchange="setModelParam(${i},'priceMax',this.value)" />
-          </div>
-        </div>
-        <div class="field">
-          <label>שנתון</label>
+            <input type="number" placeholder="מקסימום" value="${p.priceMax||''}" oninput="sp(${i},'priceMax',this.value)"/>
+          </div></div>
+        <div class="field"><label>שנתון</label>
           <div class="range-row">
-            <input type="number" placeholder="מ-" value="${p.yearMin||''}" onchange="setModelParam(${i},'yearMin',this.value)" />
+            <input type="number" placeholder="מ-" value="${p.yearMin||''}" oninput="sp(${i},'yearMin',this.value)"/>
             <span>—</span>
-            <input type="number" placeholder="עד" value="${p.yearMax||''}" onchange="setModelParam(${i},'yearMax',this.value)" />
-          </div>
-        </div>
-        <div class="field">
-          <label>קילומטרז'</label>
+            <input type="number" placeholder="עד" value="${p.yearMax||''}" oninput="sp(${i},'yearMax',this.value)"/>
+          </div></div>
+        <div class="field"><label>קילומטרז'</label>
           <div class="range-row">
-            <input type="number" placeholder="מ-" value="${p.kmMin||''}" onchange="setModelParam(${i},'kmMin',this.value)" />
+            <input type="number" placeholder="מ-" value="${p.kmMin||''}" oninput="sp(${i},'kmMin',this.value)"/>
             <span>—</span>
-            <input type="number" placeholder="עד" value="${p.kmMax||''}" onchange="setModelParam(${i},'kmMax',this.value)" />
-          </div>
-        </div>
-        <div class="field">
-          <label>יד</label>
+            <input type="number" placeholder="עד" value="${p.kmMax||''}" oninput="sp(${i},'kmMax',this.value)"/>
+          </div></div>
+        <div class="field"><label>יד</label>
           <div class="range-row">
-            <input type="number" placeholder="מ-" min="1" max="10" value="${p.handMin||''}" onchange="setModelParam(${i},'handMin',this.value)" />
+            <input type="number" placeholder="מ-" min="1" max="10" value="${p.handMin||''}" oninput="sp(${i},'handMin',this.value)"/>
             <span>—</span>
-            <input type="number" placeholder="עד" min="1" max="10" value="${p.handMax||''}" onchange="setModelParam(${i},'handMax',this.value)" />
-          </div>
-        </div>
-        <div class="field">
-          <label>הערות ספציפיות</label>
-          <input type="text" placeholder="לדוגמה: אוטומטי בלבד" value="${p.extra||''}" onchange="setModelParam(${i},'extra',this.value)" />
+            <input type="number" placeholder="עד" min="1" max="10" value="${p.handMax||''}" oninput="sp(${i},'handMax',this.value)"/>
+          </div></div>
+        <div class="field"><label>הערות ספציפיות</label>
+          <input type="text" placeholder="אוטומטי, ללא תאונות..." value="${p.extra||''}" oninput="sp(${i},'extra',this.value)"/>
         </div>
       </div>
     </div>`;
   }).join('');
 }
 
-function toggleModelParams(i) {
-  const panel = document.getElementById('model-params-' + i);
-  panel.classList.toggle('open');
+function toggleCar(i){ cars[i]._open=!cars[i]._open; renderCars(); }
+function sp(i,k,v){ if(!cars[i].params)cars[i].params={}; cars[i].params[k]=v; }
+function delCar(i){ cars.splice(i,1); renderCars(); }
+function addCar(){
+  const make=document.getElementById('nMake').value.trim(), model=document.getElementById('nModel').value.trim();
+  if(!make||!model){ showToast('הכנס יצרן ודגם'); return; }
+  const last=cars.length>0?{...cars[cars.length-1].params}:{};
+  cars.push({make,model,params:last,_open:false});
+  document.getElementById('nMake').value='';
+  document.getElementById('nModel').value='';
+  renderCars();
 }
 
-function setModelParam(i, key, val) {
-  if (!models[i].params) models[i].params = {};
-  models[i].params[key] = val;
-  // re-render just the name indicator without closing the panel
-  const nameEl = document.querySelector(`#model-item-${i} .model-name`);
-  const hasOverride = Object.values(models[i].params).some(v => v !== '' && v !== undefined);
-  if (nameEl) nameEl.innerHTML = `${models[i].make} ${models[i].model} ${hasOverride ? '<span style="color:var(--accent);font-size:10px;font-family:var(--mono)">✎</span>' : ''}`;
+// ── Prompt ──
+function buildPrompt(make,model,p,sc){
+  const lines=[];
+  if(p.priceMin||p.priceMax) lines.push(`מחיר: ${p.priceMin||'0'} - ${p.priceMax||'ללא הגבלה'} ₪`);
+  if(p.yearMin||p.yearMax) lines.push(`שנתון: ${p.yearMin||'ללא מינימום'} - ${p.yearMax||'ללא מקסימום'}`);
+  if(p.kmMin||p.kmMax) lines.push(`קילומטרז': ${p.kmMin||'0'} - ${p.kmMax||'ללא הגבלה'} ק"מ`);
+  if(p.handMin||p.handMax) lines.push(`יד: ${p.handMin||'1'} - ${p.handMax||'ללא הגבלה'}`);
+  if(p.extra) lines.push(`דרישות: ${p.extra}`);
+  const totalW=Object.values(sc).reduce((s,v)=>s+v.weight,0)||100;
+  const priceY=getP('price').yv, priceR=getP('price').rv;
+  const kmY=getP('km').yv, kmR=getP('km').rv;
+  const yearY=getP('year').yv, yearR=getP('year').rv;
+  const handY=getP('hand').yv, handR=getP('hand').rv;
+
+  return `אתה מנוע חיפוש רכבי יד שנייה ישראלי מקצועי.
+
+משימה: חפש באתר yad2.co.il מודעות למכירת ${make} ${model}.
+השתמש בכלי החיפוש שלך עם השאילתה: site:yad2.co.il/vehicles/cars ${make} ${model}
+וגם: yad2.co.il רכבים ${make} ${model} למכירה
+
+פרמטרי חיפוש:
+${lines.length?lines.join('\n'):'אין מגבלות ספציפיות — הצג את הטובות ביותר'}
+
+חישוב ציון 0-100 לכל מודעה:
+• מחיר (${sc.price.weight}% מהציון): האידיאל = הכי זול. ציון = 100 × (1 - מחיר / ${priceR.toLocaleString()}). קו אדום: מעל ${priceR.toLocaleString()} ₪ → פסול לחלוטין.
+• ק"מ (${sc.km.weight}%): האידיאל = 0. ציון = 100 × (1 - ק"מ / ${kmR.toLocaleString()}). קו אדום: מעל ${kmR.toLocaleString()} ק"מ → פסול.
+• שנתון (${sc.year.weight}%): האידיאל = 2025. ציון = 100 × (שנה - 2005) / 20. קו אדום: לפני ${yearR} → פסול.
+• יד (${sc.hand.weight}%): האידיאל = יד 1. ציון = 100 × (1 - (יד-1)/7). קו אדום: יד ${handR}+ → פסול.
+ציון סופי = ממוצע משוקלל / ${totalW} × 100.
+אם חצה קו אדום → אל תכלול.
+
+דגלים: ok = בתוך הטווח הירוק, yellow = סף אזהרה (מחיר>${priceY.toLocaleString()}, ק"מ>${kmY.toLocaleString()}, שנה<${yearY}, יד${handY}+), red = חרג.
+
+החזר JSON בלבד — ללא backticks, ללא הסברים, ללא טקסט לפני/אחרי:
+{"listings":[{"id":"${make}_${model}_<price>_<year>","title":"כותרת המודעה כפי שמופיעה ביד2","make":"${make}","model":"${model}","price":<מספר שלם>,"year":<מספר שלם>,"km":<מספר שלם>,"hand":<מספר שלם>,"location":"עיר","url":"https://www.yad2.co.il/vehicles/cars/...","score":<0-100>,"scoreLabel":"high|mid|low","priceFlag":"ok|yellow|red","kmFlag":"ok|yellow|red","yearFlag":"ok|yellow|red","handFlag":"ok|yellow|red","notes":"2-3 משפטים בעברית: מה טוב, האם המחיר הגיוני ביחס לשוק, מה לבדוק"}]}
+high=75+, mid=50-74, low=<50. החזר 3-5 מודעות. אם אין תוצאות מדויקות — הצג קרובות עם ציון נמוך.`;
 }
 
-function addModel() {
-  const make = document.getElementById('newMake').value.trim();
-  const model = document.getElementById('newModel').value.trim();
-  if (!make || !model) return;
-  // copy last model's params as starting point
-  const lastParams = models.length > 0 ? { ...models[models.length - 1].params } : {};
-  models.push({ make, model, params: lastParams });
-  document.getElementById('newMake').value = '';
-  document.getElementById('newModel').value = '';
-  renderModels();
-}
+// ── Scan ──
+function log(msg){ const el=document.getElementById('logBox'); const t=new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'}); el.innerHTML=`<span style="color:var(--text3)">[${t}]</span> ${msg}\n`+el.innerHTML; }
+function setStatus(s,txt){ document.getElementById('spill').className='status-pill '+s; document.getElementById('stxt').textContent=txt; document.getElementById('sdot').className='dot'+(s!=='idle'?' pulse':''); }
+function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3500); }
 
-function removeModel(i) {
-  models.splice(i, 1);
-  renderModels();
-}
-
-function getSharedParams() {
-  return {
-    priceMin: document.getElementById('priceMin').value,
-    priceMax: document.getElementById('priceMax').value,
-    yearMin: document.getElementById('yearMin').value,
-    yearMax: document.getElementById('yearMax').value,
-    kmMin: document.getElementById('kmMin').value,
-    kmMax: document.getElementById('kmMax').value,
-    handMin: document.getElementById('handMin').value,
-    handMax: document.getElementById('handMax').value,
-    extra: document.getElementById('extraNotes').value.trim(),
-  };
-}
-
-// Slider config per param
-const SLIDER_CONFIG = {
-  price: { min: 0,    max: 200000, step: 5000, yellowVal: 120000, redVal: 150000, format: v => (v/1000).toFixed(0)+'K₪' },
-  km:    { min: 0,    max: 300000, step: 5000, yellowVal: 150000, redVal: 200000, format: v => (v/1000).toFixed(0)+'Kק"מ' },
-  year:  { min: 2005, max: 2025,   step: 1,    yellowVal: 2018,   redVal: 2015,   format: v => String(v) },
-  hand:  { min: 1,    max: 8,      step: 1,    yellowVal: 3,      redVal: 5,      format: v => 'יד '+v },
-};
-
-function pct(val, cfg) { return Math.max(0, Math.min(100, (val - cfg.min) / (cfg.max - cfg.min) * 100)); }
-function valFromPct(p, cfg) {
-  const raw = cfg.min + p / 100 * (cfg.max - cfg.min);
-  return Math.round(raw / cfg.step) * cfg.step;
-}
-
-function updateSliderUI(param) {
-  const cfg = SLIDER_CONFIG[param];
-  const yVal = cfg.yellowVal, rVal = cfg.redVal;
-  const yPct = pct(yVal, cfg), rPct = pct(rVal, cfg);
-  const isYear = param === 'year';
-
-  if (isYear) {
-    const low = Math.min(yPct, rPct), high = Math.max(yPct, rPct);
-    document.getElementById('fill-red-'+param).style.cssText = `left:0%;width:${low}%;border-radius:3px 0 0 3px`;
-    document.getElementById('fill-yellow-'+param).style.cssText = `left:${low}%;width:${high-low}%`;
-    document.getElementById('fill-green-'+param).style.cssText = `left:${high}%;width:${100-high}%;border-radius:0 3px 3px 0`;
-  } else {
-    const low = Math.min(yPct, rPct), high = Math.max(yPct, rPct);
-    document.getElementById('fill-green-'+param).style.cssText = `left:0%;width:${low}%;border-radius:3px 0 0 3px`;
-    document.getElementById('fill-yellow-'+param).style.cssText = `left:${low}%;width:${high-low}%`;
-    document.getElementById('fill-red-'+param).style.cssText = `left:${high}%;width:${100-high}%;border-radius:0 3px 3px 0`;
-  }
-
-  document.getElementById('thumb-yellow-'+param).style.left = yPct + '%';
-  document.getElementById('thumb-red-'+param).style.left = rPct + '%';
-
-  const yLbl = document.getElementById('tv-yellow-'+param);
-  const rLbl = document.getElementById('tv-red-'+param);
-
-  yLbl.style.right = '';
-  rLbl.style.right = '';
-  yLbl.style.left = yPct + '%';
-  rLbl.style.left = rPct + '%';
-  yLbl.textContent = cfg.format(yVal);
-  rLbl.textContent = cfg.format(rVal);
-
-  // Collision avoidance: stack vertically when thumbs are close
-  const dist = Math.abs(yPct - rPct);
-  if (dist < 14) {
-    yLbl.style.top = '0px';
-    rLbl.style.top = '14px';
-  } else {
-    yLbl.style.top = '0px';
-    rLbl.style.top = '0px';
-  }
-}
-
-function initSliders() { Object.keys(SLIDER_CONFIG).forEach(p => updateSliderUI(p)); }
-
-let dragging = null;
-function startDrag(e, param, thumb) {
-  e.preventDefault();
-  dragging = { param, thumb };
-  document.addEventListener('mousemove', onDrag);
-  document.addEventListener('mouseup', stopDrag);
-  document.addEventListener('touchmove', onDrag, { passive: false });
-  document.addEventListener('touchend', stopDrag);
-}
-function onDrag(e) {
-  if (!dragging) return;
-  e.preventDefault();
-  const { param, thumb } = dragging;
-  const track = document.getElementById('track-' + param);
-  const rect = track.getBoundingClientRect();
-  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-  const rawPct = (rect.right - clientX) / rect.width * 100;
-  const clampedPct = Math.max(0, Math.min(100, rawPct));
-  SLIDER_CONFIG[param][thumb + 'Val'] = valFromPct(clampedPct, SLIDER_CONFIG[param]);
-  updateSliderUI(param);
-}
-function stopDrag() {
-  dragging = null;
-  document.removeEventListener('mousemove', onDrag);
-  document.removeEventListener('mouseup', stopDrag);
-  document.removeEventListener('touchmove', onDrag);
-  document.removeEventListener('touchend', stopDrag);
-}
-
-function getScoringConfig() {
-  return {
-    price: { weight: +document.getElementById('w-price').value, yellow: SLIDER_CONFIG.price.yellowVal, red: SLIDER_CONFIG.price.redVal },
-    km:    { weight: +document.getElementById('w-km').value,    yellow: SLIDER_CONFIG.km.yellowVal,    red: SLIDER_CONFIG.km.redVal    },
-    year:  { weight: +document.getElementById('w-year').value,  yellow: SLIDER_CONFIG.year.yellowVal,  red: SLIDER_CONFIG.year.redVal  },
-    hand:  { weight: +document.getElementById('w-hand').value,  yellow: SLIDER_CONFIG.hand.yellowVal,  red: SLIDER_CONFIG.hand.redVal  },
-  };
-}
-
-function buildPrompt(make, model, p, scoring) {
-  const criteria = [];
-  if (p.priceMin || p.priceMax) criteria.push(`מחיר: ${p.priceMin||'0'}-${p.priceMax||'ללא הגבלה'} ₪`);
-  if (p.yearMin || p.yearMax) criteria.push(`שנתון: ${p.yearMin||'ללא מינימום'}-${p.yearMax||'ללא מקסימום'}`);
-  if (p.kmMin || p.kmMax) criteria.push(`קילומטרז': ${p.kmMin||'0'}-${p.kmMax||'ללא הגבלה'} ק"מ`);
-  if (p.handMin || p.handMax) criteria.push(`יד: ${p.handMin||'1'}-${p.handMax||'ללא הגבלה'}`);
-  if (p.extra) criteria.push(`דרישות נוספות: ${p.extra}`);
-
-  const totalWeight = Object.values(scoring).reduce((s,v)=>s+v.weight,0)||100;
-
-  return `אתה מנוע חיפוש רכב ישראלי מקצועי. חפש ביד2 (yad2.co.il) מודעות עבור: ${make} ${model}
-
-קריטריוני חיפוש:
-${criteria.join('\n') || 'ללא הגבלות ספציפיות'}
-
-מנוע ציון (0-100) — חשוב: ציון מלא (100%) ניתן רק לערך האידיאלי, לא רק לכל ערך שבטווח:
-
-לכל פרמטר, חשב ציון פנימי 0-100 כך:
-- מחיר (משקל ${scoring.price.weight}%): 
-  * האידיאל = מחיר מינימום בטווח (או כמה שזול יותר). ציון = 100 × (1 - (מחיר - מינימום) / (מקסימום - מינימום)).
-  * אם אין מינימום, האידיאל = המחיר הנמוך ביותר שנמצא.
-  * חריגה ${scoring.price.yellow}% מעל המקסימום = ציון חלקי (מ-50 ל-0). חריגה ${scoring.price.red}% = קו אדום, פסילה מוחלטת.
-- קילומטרז' (משקל ${scoring.km.weight}%):
-  * האידיאל = ק"מ מינימום (או 0). ציון = 100 × (1 - (ק"מ - מינימום) / (מקסימום - מינימום)).
-  * חריגה ${scoring.km.yellow}% מעל המקסימום = ציון חלקי. חריגה ${scoring.km.red}% = פסילה.
-- שנתון (משקל ${scoring.year.weight}%):
-  * האידיאל = שנה מקסימום (הכי חדש). ציון = 100 × (שנה - מינימום) / (מקסימום - מינימום).
-  * חריגה ${scoring.year.yellow} שנים מחוץ לטווח = ציון חלקי. חריגה ${scoring.year.red} שנים = פסילה.
-- יד (משקל ${scoring.hand.weight}%):
-  * האידיאל = יד 1. ציון = 100 × (1 - (יד - 1) / 5).
-  * חריגה ${scoring.hand.yellow} ידיים מעל המקסימום = ציון חלקי. חריגה ${scoring.hand.red} = פסילה.
-
-ציון סופי = סכום (ציון_פרמטר × משקל) / ${totalWeight}.
-אם מודעה חוצה קו אדום כלשהו — אל תכלול אותה כלל.
-
-השב JSON בלבד (ללא backticks, ללא הסברים):
-{
-  "listings": [
-    {
-      "id": "מזהה ייחודי (צרף שנה_מחיר_קמ)",
-      "title": "כותרת המודעה",
-      "make": "${make}",
-      "model": "${model}",
-      "price": 123456,
-      "year": 2019,
-      "km": 85000,
-      "hand": 2,
-      "location": "עיר",
-      "url": "קישור אם ידוע",
-      "score": 82,
-      "scoreLabel": "high",
-      "priceFlag": "ok|yellow|red",
-      "kmFlag": "ok|yellow|red",
-      "yearFlag": "ok|yellow|red",
-      "handFlag": "ok|yellow|red",
-      "notes": "2-3 משפטים: יתרונות, חסרונות, האם המחיר הגיוני לשוק"
-    }
-  ]
-}
-
-scoreLabel: "high" (75+), "mid" (50-74), "low" (מתחת ל-50).
-החזר עד 5 מודעות רלוונטיות.`;
-}
-
-function addLog(msg) {
-  const el = document.getElementById('logBox');
-  const t = new Date().toLocaleTimeString('he-IL', {hour:'2-digit',minute:'2-digit'});
-  el.innerHTML = `<span style="color:var(--text3)">[${t}]</span> ${msg}\n` + el.innerHTML;
-}
-
-function setStatus(state, text) {
-  const pill = document.getElementById('statusPill');
-  const dot = pill.querySelector('.dot');
-  pill.className = 'status-pill ' + state;
-  document.getElementById('statusText').textContent = text;
-  dot.className = 'dot' + (state !== 'idle' ? ' pulse' : '');
-}
-
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3500);
-}
-
-async function scanModel(make, model, params, scoring) {
-  const apiKey = getApiKey();
-  const prompt = buildPrompt(make, model, params, scoring);
-  try {
-    const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        tools: [{ google_search: {} }],
-        generationConfig: { temperature: 0.1, maxOutputTokens: 1500 }
+async function scanOne(make,model,params,sc){
+  const key=getKey();
+  try{
+    const resp=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        contents:[{parts:[{text:buildPrompt(make,model,params,sc)}]}],
+        tools:[{google_search:{}}],
+        generationConfig:{temperature:0.1,maxOutputTokens:2000}
       })
     });
-    const data = await resp.json();
-    if (data.error) { addLog(`שגיאת API: ${data.error.message}`); return []; }
-    const text = data.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || '';
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) { addLog(`לא נמצא JSON בתשובה עבור ${make} ${model}`); return []; }
-    const parsed = JSON.parse(jsonMatch[0]);
-    return (parsed.listings || []).map(l => ({ ...l, scannedAt: new Date().toISOString(), isNew: !seenIds.has(l.id) }));
-  } catch(e) {
-    addLog(`שגיאה בחיפוש ${make} ${model}: ${e.message}`);
-    return [];
-  }
+    const data=await resp.json();
+    if(data.error){ log(`שגיאה (${make} ${model}): ${data.error.message}`); return []; }
+    const text=(data.candidates?.[0]?.content?.parts||[]).map(p=>p.text||'').join('');
+    const m=text.match(/\{[\s\S]*\}/);
+    if(!m){ log(`אין JSON עבור ${make} ${model}`); return []; }
+    const parsed=JSON.parse(m[0]);
+    return (parsed.listings||[]).map(l=>({...l,scannedAt:new Date().toISOString(),isNew:!seenIds.has(l.id)}));
+  } catch(e){ log(`שגיאת רשת: ${e.message}`); return []; }
 }
 
-async function runAllScans() {
-  if (models.length === 0) { showToast('הוסף לפחות דגם אחד'); return; }
-  if (!getApiKey()) { showToast('הכנס מפתח API תחילה'); return; }
-  const sharedParams = getSharedParams();
-  const scoring = getScoringConfig();
+async function runAll(){
+  if(!cars.length){ showToast('הוסף לפחות רכב אחד'); return; }
+  if(!getKey()){ showToast('הכנס מפתח API'); return; }
+  const sc=getScoring();
   scanCount++;
-  setStatus('scanning', `סורק... (${models.length} דגמים)`);
-  addLog(`סריקה #${scanCount} — ${models.length} דגמים`);
-
-  const promises = models.map(m => {
-    // merge: model-specific overrides shared (empty string = use shared)
-    const mp = m.params || {};
-    const merged = {
-      priceMin: mp.priceMin || sharedParams.priceMin,
-      priceMax: mp.priceMax || sharedParams.priceMax,
-      yearMin:  mp.yearMin  || sharedParams.yearMin,
-      yearMax:  mp.yearMax  || sharedParams.yearMax,
-      kmMin:    mp.kmMin    || sharedParams.kmMin,
-      kmMax:    mp.kmMax    || sharedParams.kmMax,
-      handMin:  mp.handMin  || sharedParams.handMin,
-      handMax:  mp.handMax  || sharedParams.handMax,
-      extra:    mp.extra !== undefined && mp.extra !== '' ? mp.extra : sharedParams.extra,
-    };
-    return scanModel(m.make, m.model, merged, scoring);
-  });
-  const results = await Promise.all(promises);
-  const flat = results.flat();
-
-  let newCount = 0;
-  flat.forEach(l => {
-    if (!seenIds.has(l.id)) {
-      seenIds.add(l.id);
-      allResults.unshift(l);
-      newCount++;
-    }
-  });
-
-  addLog(`נמצאו ${flat.length} מודעות, ${newCount} חדשות`);
-  if (newCount > 0) showToast(`${newCount} מודעות חדשות נמצאו!`);
-
-  document.getElementById('mainMeta').textContent = `${allResults.length} מודעות סה"כ · סריקה אחרונה: ${new Date().toLocaleTimeString('he-IL')}`;
-  setStatus(intervalId ? 'active' : 'idle', intervalId ? `פעיל · כל ${document.getElementById('intervalMin').value} דק'` : 'ממתין');
-  renderResults();
-
-  if ('Notification' in window && Notification.permission === 'granted' && newCount > 0) {
-    new Notification('יד2 Scout', { body: `נמצאו ${newCount} מודעות חדשות!` });
-  }
-}
-
-function setFilter(f, el) {
-  activeFilter = f;
-  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
+  setStatus('scanning',`סורק ${cars.length} רכבים...`);
+  log(`סריקה #${scanCount} — ${cars.length} רכבים במקביל`);
+  const results=await Promise.all(cars.map(c=>scanOne(c.make,c.model,c.params||{},sc)));
+  const flat=results.flat();
+  let newCount=0;
+  flat.forEach(l=>{ if(!seenIds.has(l.id)){ seenIds.add(l.id); allResults.unshift(l); newCount++; } });
+  log(`${flat.length} מודעות, ${newCount} חדשות`);
+  if(newCount>0){ showToast(`${newCount} מודעות חדשות!`); if('Notification' in window&&Notification.permission==='granted') new Notification('יד2 Scout',{body:`${newCount} מודעות חדשות`}); }
+  document.getElementById('meta').textContent=`${allResults.length} מודעות סה"כ · סריקה אחרונה: ${new Date().toLocaleTimeString('he-IL')}`;
+  setStatus(intervalId?'active':'idle', intervalId?`פעיל · כל ${document.getElementById('intMin').value} דק'`:'ממתין');
   renderResults();
 }
 
-function renderResults() {
-  const filtered = activeFilter === 'all' ? allResults :
-    allResults.filter(l => l.scoreLabel === activeFilter || (activeFilter === 'mid' && l.scoreLabel === 'mid'));
+function startMonitor(){
+  if(!cars.length){ showToast('הוסף לפחות רכב אחד'); return; }
+  if(!getKey()){ showToast('הכנס מפתח API'); return; }
+  const mins=parseInt(document.getElementById('intMin').value)||720;
+  runAll();
+  intervalId=setInterval(runAll,mins*60*1000);
+  document.getElementById('startBtn').style.display='none';
+  document.getElementById('stopBtn').style.display='block';
+  if('Notification' in window) Notification.requestPermission();
+}
+function stopMonitor(){ clearInterval(intervalId); intervalId=null; document.getElementById('startBtn').style.display='block'; document.getElementById('stopBtn').style.display='none'; setStatus('idle','כבוי'); log('ניטור הופסק'); }
 
-  const el = document.getElementById('resultsList');
-  if (filtered.length === 0) {
-    el.innerHTML = `<div class="empty"><div class="empty-icon">◉</div><div class="empty-text">${allResults.length === 0 ? 'הגדר דגמים והתחל ניטור' : 'אין מודעות בקטגוריה זו'}</div></div>`;
-    return;
-  }
+function setF(f,el){ activeFilter=f; document.querySelectorAll('.fchip').forEach(c=>c.classList.remove('active')); el.classList.add('active'); renderResults(); }
 
-  el.innerHTML = filtered.map(l => {
-    const scoreClass = l.scoreLabel === 'high' ? 'high' : l.scoreLabel === 'mid' ? 'mid' : 'low';
-    const priceChipClass = l.priceFlag === 'ok' ? 'good' : l.priceFlag === 'yellow' ? 'warn' : '';
-    const kmChipClass = l.kmFlag === 'ok' ? 'good' : l.kmFlag === 'yellow' ? 'warn' : '';
-    const yearChipClass = l.yearFlag === 'ok' ? 'good' : l.yearFlag === 'yellow' ? 'warn' : '';
-    const handChipClass = l.handFlag === 'ok' ? 'good' : l.handFlag === 'yellow' ? 'warn' : '';
-    const time = new Date(l.scannedAt).toLocaleString('he-IL',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
-
-    return `
-    <div class="result-card score-${scoreClass}">
-      <div class="card-top">
-        <div>
-          ${l.isNew ? '<span class="new-badge">חדש</span>' : ''}
-          <div class="card-title">${l.title}</div>
-          <div class="card-model-tag">${l.make} ${l.model}</div>
-        </div>
-        <div class="score-display">
-          <div class="score-num ${scoreClass}">${l.score}</div>
-          <div class="score-label">/100</div>
-        </div>
+function renderResults(){
+  const el=document.getElementById('results');
+  const list=activeFilter==='all'?allResults:allResults.filter(l=>l.scoreLabel===activeFilter);
+  if(!list.length){ el.innerHTML=`<div class="empty"><div class="empty-icon">◉</div><div class="empty-text">${!allResults.length?'הגדר רכבים והתחל ניטור':'אין מודעות בקטגוריה זו'}</div></div>`; return; }
+  el.innerHTML=list.map(l=>{
+    const sc=l.scoreLabel==='high'?'high':l.scoreLabel==='mid'?'mid':'low';
+    const t=new Date(l.scannedAt).toLocaleString('he-IL',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+    const fg=f=>f==='ok'?'g':f==='yellow'?'w':'';
+    return `<div class="rc ${sc}">
+      <div class="rc-top">
+        <div><div class="rc-title">${l.isNew?'<span class="nb">חדש</span>':''}${l.title}</div><div class="rc-tag">${l.make} ${l.model}</div></div>
+        <div style="text-align:center"><div class="snum ${sc}">${l.score}</div><div class="slbl">/100</div></div>
       </div>
-      <div class="card-chips">
-        ${l.price ? `<span class="chip ${priceChipClass}">₪ ${Number(l.price).toLocaleString('he-IL')}</span>` : ''}
-        ${l.year ? `<span class="chip ${yearChipClass}">${l.year}</span>` : ''}
-        ${l.km ? `<span class="chip ${kmChipClass}">${Number(l.km).toLocaleString('he-IL')} ק"מ</span>` : ''}
-        ${l.hand ? `<span class="chip ${handChipClass}">יד ${l.hand}</span>` : ''}
-        ${l.location ? `<span class="chip">${l.location}</span>` : ''}
+      <div class="chips">
+        ${l.price!=null?`<span class="ch ${fg(l.priceFlag)}">₪ ${Number(l.price).toLocaleString('he-IL')}</span>`:''}
+        ${l.year!=null?`<span class="ch ${fg(l.yearFlag)}">${l.year}</span>`:''}
+        ${l.km!=null?`<span class="ch ${fg(l.kmFlag)}">${Number(l.km).toLocaleString('he-IL')} ק"מ</span>`:''}
+        ${l.hand!=null?`<span class="ch ${fg(l.handFlag)}">יד ${l.hand}</span>`:''}
+        ${l.location?`<span class="ch">${l.location}</span>`:''}
       </div>
-      <div class="card-notes">${l.notes}</div>
-      ${l.url && l.url !== 'לא ידוע' && l.url !== '' ? `<a class="card-link" href="${l.url}" target="_blank">פתח מודעה →</a>` : ''}
-      <div class="card-time">${time}</div>
+      <div class="rc-notes">${l.notes}</div>
+      ${l.url&&l.url.startsWith('http')?`<a class="rc-link" href="${l.url}" target="_blank">פתח מודעה →</a>`:''}
+      <div class="rc-time">${t}</div>
     </div>`;
   }).join('');
 }
 
-function startMonitor() {
-  if (models.length === 0) { showToast('הוסף לפחות דגם אחד'); return; }
-  const mins = parseInt(document.getElementById('intervalMin').value) || 30;
-  runAllScans();
-  intervalId = setInterval(runAllScans, mins * 60 * 1000);
-  document.getElementById('startBtn').style.display = 'none';
-  document.getElementById('stopBtn').style.display = 'block';
-  setStatus('active', `פעיל · כל ${mins} דק'`);
-  addLog(`ניטור הופעל, מחזור: ${mins} דקות`);
-  if ('Notification' in window) Notification.requestPermission();
-}
-
-function stopMonitor() {
-  clearInterval(intervalId);
-  intervalId = null;
-  document.getElementById('startBtn').style.display = 'block';
-  document.getElementById('stopBtn').style.display = 'none';
-  setStatus('idle', 'כבוי');
-  addLog('ניטור הופסק');
-}
-
-init();
+// ── Init ──
+(function init(){
+  buildSliders();
+  const saved=sessionStorage.getItem('gk');
+  if(saved){ document.getElementById('apiKey').value=saved; onKey(); }
+  cars=[{make:'טויוטה',model:'קורולה',params:{},_open:false}];
+  renderCars();
+})();
 </script>
 </body>
 </html>
