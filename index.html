@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מנטר רכב v2</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Heebo:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d0d0d;
+  --surface: #161616;
+  --surface2: #1e1e1e;
+  --border: #2a2a2a;
+  --border2: #333;
+  --text: #e8e8e8;
+  --text2: #888;
+  --text3: #555;
+  --accent: #c8f04a;
+  --accent-dim: rgba(200,240,74,0.12);
+  --red: #ff4444;
+  --red-dim: rgba(255,68,68,0.12);
+  --yellow: #f0b429;
+  --yellow-dim: rgba(240,180,41,0.12);
+  --green: #4ade80;
+  --green-dim: rgba(74,222,128,0.1);
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'Heebo', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 14px; min-height: 100vh; }
+
+/* Layout */
+.app { display: grid; grid-template-columns: 320px 1fr; min-height: 100vh; }
+.sidebar { background: var(--surface); border-left: 1px solid var(--border); padding: 0; overflow-y: auto; display: flex; flex-direction: column; }
+.main { padding: 24px; overflow-y: auto; }
+
+/* Header */
+.sidebar-header { padding: 20px 20px 16px; border-bottom: 1px solid var(--border); }
+.logo { font-family: var(--mono); font-size: 11px; color: var(--text3); letter-spacing: 0.1em; margin-bottom: 4px; text-transform: uppercase; }
+.logo-title { font-size: 18px; font-weight: 700; color: var(--text); letter-spacing: -0.02em; }
+.logo-title span { color: var(--accent); }
+
+/* Status pill */
+.status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 20px; font-family: var(--mono); font-size: 11px; margin-top: 10px; }
+.status-pill.idle { background: var(--surface2); color: var(--text3); border: 1px solid var(--border); }
+.status-pill.active { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(200,240,74,0.3); }
+.status-pill.scanning { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(240,180,41,0.3); }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.dot.pulse { animation: blink 1s infinite; }
+@keyframes blink { 0%,100%{opacity:1}50%{opacity:0.2} }
+
+/* Section */
+.section { padding: 16px 20px; border-bottom: 1px solid var(--border); }
+.section-label { font-family: var(--mono); font-size: 10px; color: var(--text3); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 12px; }
+
+/* Fields */
+.field { margin-bottom: 10px; }
+.field label { display: block; font-size: 12px; color: var(--text2); margin-bottom: 4px; }
+.field input, .field select {
+  width: 100%; background: var(--surface2); border: 1px solid var(--border2); border-radius: 6px;
+  padding: 7px 10px; color: var(--text); font-family: var(--sans); font-size: 13px;
+  transition: border-color 0.15s;
+}
+.field input:focus, .field select:focus { outline: none; border-color: var(--accent); }
+.field input::placeholder { color: var(--text3); }
+.range-row { display: grid; grid-template-columns: 1fr 18px 1fr; align-items: center; gap: 4px; }
+.range-row span { text-align: center; color: var(--text3); font-size: 12px; }
+
+/* Models list */
+.model-item { background: var(--surface2); border: 1px solid var(--border2); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+.model-item .model-name { font-weight: 500; font-size: 13px; }
+.model-item .model-sub { font-size: 11px; color: var(--text2); margin-top: 2px; font-family: var(--mono); }
+.model-item .del-btn { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 16px; padding: 0 4px; transition: color 0.15s; }
+.model-item .del-btn:hover { color: var(--red); }
+.add-model-row { display: flex; gap: 6px; }
+.add-model-row input { flex: 1; }
+.btn-add { background: var(--accent-dim); border: 1px solid rgba(200,240,74,0.3); color: var(--accent); border-radius: 6px; padding: 7px 14px; cursor: pointer; font-family: var(--sans); font-size: 13px; white-space: nowrap; transition: background 0.15s; }
+.btn-add:hover { background: rgba(200,240,74,0.2); }
+
+/* Scoring config */
+.score-row { display: grid; grid-template-columns: 1fr 60px 60px 60px; gap: 6px; align-items: center; margin-bottom: 8px; }
+.score-row .param-name { font-size: 12px; color: var(--text2); }
+.score-row input { background: var(--surface2); border: 1px solid var(--border2); border-radius: 5px; padding: 5px 6px; color: var(--text); font-family: var(--mono); font-size: 11px; text-align: center; width: 100%; }
+.score-row input:focus { outline: none; border-color: var(--accent); }
+.score-header { display: grid; grid-template-columns: 1fr 60px 60px 60px; gap: 6px; margin-bottom: 4px; }
+.score-header span { font-family: var(--mono); font-size: 10px; color: var(--text3); text-align: center; }
+
+/* Buttons */
+.btn-primary { width: 100%; background: var(--accent); color: #000; border: none; border-radius: 8px; padding: 11px; font-family: var(--sans); font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity 0.15s; letter-spacing: 0.01em; }
+.btn-primary:hover { opacity: 0.9; }
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-stop { width: 100%; background: var(--red-dim); border: 1px solid rgba(255,68,68,0.3); color: var(--red); border-radius: 8px; padding: 10px; font-family: var(--sans); font-size: 14px; cursor: pointer; transition: background 0.15s; }
+.btn-stop:hover { background: rgba(255,68,68,0.2); }
+.btn-scan-now { width: 100%; background: var(--surface2); border: 1px solid var(--border2); color: var(--text2); border-radius: 8px; padding: 10px; font-family: var(--sans); font-size: 13px; cursor: pointer; margin-top: 8px; transition: border-color 0.15s; }
+.btn-scan-now:hover { border-color: var(--text2); color: var(--text); }
+
+/* Main area */
+.main-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; }
+.main-title { font-size: 22px; font-weight: 700; letter-spacing: -0.03em; }
+.main-meta { font-family: var(--mono); font-size: 11px; color: var(--text3); }
+
+/* Filter bar */
+.filter-bar { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.filter-chip { background: var(--surface); border: 1px solid var(--border2); color: var(--text2); border-radius: 20px; padding: 5px 14px; font-size: 12px; cursor: pointer; transition: all 0.15s; font-family: var(--mono); }
+.filter-chip.active { background: var(--accent-dim); border-color: rgba(200,240,74,0.4); color: var(--accent); }
+.filter-chip:hover { border-color: var(--text3); }
+
+/* Result cards */
+.result-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 16px 18px; margin-bottom: 12px; transition: border-color 0.2s;
+  position: relative; overflow: hidden;
+}
+.result-card::before { content: ''; position: absolute; top: 0; right: 0; width: 3px; height: 100%; }
+.result-card.score-high::before { background: var(--green); }
+.result-card.score-mid::before { background: var(--yellow); }
+.result-card.score-low::before { background: var(--red); }
+.result-card:hover { border-color: var(--border2); }
+.card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+.card-title { font-size: 15px; font-weight: 600; color: var(--text); }
+.card-model-tag { font-size: 11px; color: var(--text3); margin-top: 2px; font-family: var(--mono); }
+.score-display { text-align: center; }
+.score-num { font-family: var(--mono); font-size: 24px; font-weight: 500; line-height: 1; }
+.score-num.high { color: var(--green); }
+.score-num.mid { color: var(--yellow); }
+.score-num.low { color: var(--red); }
+.score-label { font-family: var(--mono); font-size: 10px; color: var(--text3); margin-top: 2px; }
+.card-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.chip { background: var(--surface2); border: 1px solid var(--border); color: var(--text2); border-radius: 6px; padding: 3px 9px; font-size: 12px; font-family: var(--mono); }
+.chip.warn { border-color: rgba(240,180,41,0.4); color: var(--yellow); background: var(--yellow-dim); }
+.chip.good { border-color: rgba(74,222,128,0.3); color: var(--green); background: var(--green-dim); }
+.card-notes { font-size: 12px; color: var(--text2); line-height: 1.6; border-top: 1px solid var(--border); padding-top: 10px; }
+.card-link { display: inline-block; margin-top: 8px; font-family: var(--mono); font-size: 11px; color: var(--accent); text-decoration: none; }
+.card-link:hover { text-decoration: underline; }
+.card-time { font-family: var(--mono); font-size: 10px; color: var(--text3); margin-top: 6px; }
+.new-badge { display: inline-block; background: var(--accent); color: #000; font-size: 10px; font-weight: 700; border-radius: 4px; padding: 1px 6px; margin-right: 8px; font-family: var(--mono); }
+
+/* Empty state */
+.empty { text-align: center; padding: 80px 0; color: var(--text3); }
+.empty-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.4; }
+.empty-text { font-family: var(--mono); font-size: 13px; }
+
+/* Log */
+.log-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-family: var(--mono); font-size: 11px; color: var(--text3); max-height: 80px; overflow-y: auto; margin-top: 12px; line-height: 1.7; }
+
+/* Notification */
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--accent); color: #000; padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 13px; z-index: 9999; transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1); pointer-events: none; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">car monitor</div>
+      <div class="logo-title">יד<span>2</span> Scout</div>
+      <div class="status-pill idle" id="statusPill">
+        <div class="dot"></div>
+        <span id="statusText">כבוי</span>
+      </div>
+    </div>
+
+    <!-- API KEY -->
+    <div class="section">
+      <div class="section-label">מפתח API</div>
+      <div class="field">
+        <label>Anthropic API Key</label>
+        <div style="display:flex;gap:6px;align-items:center">
+          <input type="password" id="apiKeyInput" placeholder="sk-ant-..." style="flex:1" oninput="onApiKeyChange()" />
+          <button onclick="toggleApiVis()" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text2);border-radius:6px;padding:7px 10px;cursor:pointer;font-size:13px" id="visBtn">👁</button>
+        </div>
+      </div>
+      <div id="apiKeyStatus" style="font-family:var(--mono);font-size:11px;color:var(--text3);margin-top:4px">
+        הכנס מפתח להפעלה — <a href="https://console.anthropic.com/settings/keys" target="_blank" style="color:var(--accent);text-decoration:none">קבל מפתח ←</a>
+      </div>
+    </div>
+
+    <!-- MODELS -->
+    <div class="section">
+      <div class="section-label">דגמים לחיפוש</div>
+      <div id="modelsList"></div>
+      <div class="add-model-row">
+        <input type="text" id="newMake" placeholder="יצרן" />
+        <input type="text" id="newModel" placeholder="דגם" />
+        <button class="btn-add" onclick="addModel()">+ הוסף</button>
+      </div>
+    </div>
+
+    <!-- SHARED PARAMS -->
+    <div class="section">
+      <div class="section-label">פרמטרים משותפים</div>
+      <div class="field">
+        <label>מחיר (₪)</label>
+        <div class="range-row">
+          <input type="number" id="priceMin" placeholder="מינימום" />
+          <span>—</span>
+          <input type="number" id="priceMax" placeholder="מקסימום" />
+        </div>
+      </div>
+      <div class="field">
+        <label>שנתון</label>
+        <div class="range-row">
+          <input type="number" id="yearMin" placeholder="מ-" />
+          <span>—</span>
+          <input type="number" id="yearMax" placeholder="עד" />
+        </div>
+      </div>
+      <div class="field">
+        <label>קילומטרז' (ק"מ)</label>
+        <div class="range-row">
+          <input type="number" id="kmMin" placeholder="מ-" />
+          <span>—</span>
+          <input type="number" id="kmMax" placeholder="עד" />
+        </div>
+      </div>
+      <div class="field">
+        <label>יד</label>
+        <div class="range-row">
+          <input type="number" id="handMin" placeholder="מ-" min="1" max="10" />
+          <span>—</span>
+          <input type="number" id="handMax" placeholder="עד" min="1" max="10" />
+        </div>
+      </div>
+      <div class="field">
+        <label>הערות / דרישות נוספות</label>
+        <input type="text" id="extraNotes" placeholder="אוטומטי, ללא תאונות, טסט תקין..." />
+      </div>
+    </div>
+
+    <!-- SCORING ENGINE -->
+    <div class="section">
+      <div class="section-label">מנוע ציון</div>
+      <div class="score-header">
+        <span style="text-align:right">פרמטר</span>
+        <span>משקל %</span>
+        <span>סף צהוב</span>
+        <span>קו אדום</span>
+      </div>
+      <div class="score-row">
+        <span class="param-name">מחיר</span>
+        <input type="number" id="w-price" value="35" min="0" max="100" />
+        <input type="number" id="t-price" value="10" min="0" title="סטייה % מהמקסימום שמפחיתה ניקוד" />
+        <input type="number" id="r-price" value="20" min="0" title="סטייה % מהמקסימום שפוסלת" />
+      </div>
+      <div class="score-row">
+        <span class="param-name">קילומטרז'</span>
+        <input type="number" id="w-km" value="30" min="0" max="100" />
+        <input type="number" id="t-km" value="10" min="0" />
+        <input type="number" id="r-km" value="25" min="0" />
+      </div>
+      <div class="score-row">
+        <span class="param-name">שנתון</span>
+        <input type="number" id="w-year" value="20" min="0" max="100" />
+        <input type="number" id="t-year" value="1" min="0" title="שנים מחוץ לטווח לפני פגיעה בציון" />
+        <input type="number" id="r-year" value="3" min="0" title="שנים מחוץ לטווח לפני פסילה" />
+      </div>
+      <div class="score-row">
+        <span class="param-name">יד</span>
+        <input type="number" id="w-hand" value="15" min="0" max="100" />
+        <input type="number" id="t-hand" value="1" min="0" />
+        <input type="number" id="r-hand" value="2" min="0" />
+      </div>
+      <div style="font-size:11px; color:var(--text3); margin-top:6px; line-height:1.5">
+        סף צהוב = % חריגה שמפחיתה ציון<br>קו אדום = % חריגה שפוסלת לחלוטין
+      </div>
+    </div>
+
+    <!-- INTERVAL -->
+    <div class="section">
+      <div class="section-label">תדירות סריקה</div>
+      <div class="field">
+        <label>סרוק כל (דקות)</label>
+        <input type="number" id="intervalMin" value="30" min="10" max="720" />
+      </div>
+    </div>
+
+    <!-- CONTROLS -->
+    <div class="section" style="margin-top:auto">
+      <button class="btn-primary" id="startBtn" onclick="startMonitor()">▶ התחל ניטור</button>
+      <button class="btn-stop" id="stopBtn" onclick="stopMonitor()" style="display:none; margin-top:8px">■ עצור ניטור</button>
+      <button class="btn-scan-now" onclick="runAllScans()">⟳ סרוק עכשיו</button>
+      <div class="log-box" id="logBox">ממתין...</div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="main-header">
+      <div>
+        <div class="main-title">תוצאות</div>
+        <div class="main-meta" id="mainMeta">לא בוצעה סריקה עדיין</div>
+      </div>
+    </div>
+
+    <div class="filter-bar" id="filterBar">
+      <button class="filter-chip active" onclick="setFilter('all', this)">הכל</button>
+      <button class="filter-chip" onclick="setFilter('high', this)">■ התאמה גבוהה</button>
+      <button class="filter-chip" onclick="setFilter('mid', this)">■ בינוני</button>
+      <button class="filter-chip" onclick="setFilter('low', this)">■ נמוך</button>
+    </div>
+
+    <div id="resultsList">
+      <div class="empty">
+        <div class="empty-icon">◉</div>
+        <div class="empty-text">הגדר דגמים והתחל ניטור</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// State
+let models = [];
+let sharedParams = {};
+let allResults = [];
+let seenIds = new Set();
+let intervalId = null;
+let activeFilter = 'all';
+let newResultsCount = 0;
+let scanCount = 0;
+
+function getApiKey() { return document.getElementById('apiKeyInput').value.trim(); }
+
+function onApiKeyChange() {
+  const key = getApiKey();
+  const status = document.getElementById('apiKeyStatus');
+  if (!key) {
+    status.innerHTML = 'הכנס מפתח להפעלה — <a href="https://console.anthropic.com/settings/keys" target="_blank" style="color:var(--accent);text-decoration:none">קבל מפתח ←</a>';
+    status.style.color = 'var(--text3)';
+  } else if (!key.startsWith('sk-ant-')) {
+    status.textContent = '⚠ מפתח לא נראה תקין';
+    status.style.color = 'var(--yellow)';
+  } else {
+    status.textContent = '✓ מפתח נטען';
+    status.style.color = 'var(--green)';
+  }
+  if (key) sessionStorage.setItem('anthropic_key', key);
+}
+
+function toggleApiVis() {
+  const inp = document.getElementById('apiKeyInput');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+
+// Defaults
+const DEFAULT_MODELS = [
+  { make: 'טויוטה', model: 'קורולה' }
+];
+
+function init() {
+  models = [...DEFAULT_MODELS];
+  renderModels();
+  const saved = sessionStorage.getItem('anthropic_key');
+  if (saved) { document.getElementById('apiKeyInput').value = saved; onApiKeyChange(); }
+}
+
+function renderModels() {
+  const el = document.getElementById('modelsList');
+  if (models.length === 0) {
+    el.innerHTML = '<div style="color:var(--text3);font-size:12px;margin-bottom:10px;font-family:var(--mono)">אין דגמים עדיין</div>';
+    return;
+  }
+  el.innerHTML = models.map((m, i) => `
+    <div class="model-item">
+      <div>
+        <div class="model-name">${m.make} ${m.model}</div>
+      </div>
+      <button class="del-btn" onclick="removeModel(${i})">×</button>
+    </div>
+  `).join('');
+}
+
+function addModel() {
+  const make = document.getElementById('newMake').value.trim();
+  const model = document.getElementById('newModel').value.trim();
+  if (!make || !model) return;
+  models.push({ make, model });
+  document.getElementById('newMake').value = '';
+  document.getElementById('newModel').value = '';
+  renderModels();
+}
+
+function removeModel(i) {
+  models.splice(i, 1);
+  renderModels();
+}
+
+function getSharedParams() {
+  return {
+    priceMin: document.getElementById('priceMin').value,
+    priceMax: document.getElementById('priceMax').value,
+    yearMin: document.getElementById('yearMin').value,
+    yearMax: document.getElementById('yearMax').value,
+    kmMin: document.getElementById('kmMin').value,
+    kmMax: document.getElementById('kmMax').value,
+    handMin: document.getElementById('handMin').value,
+    handMax: document.getElementById('handMax').value,
+    extra: document.getElementById('extraNotes').value.trim(),
+  };
+}
+
+function getScoringConfig() {
+  return {
+    price:  { weight: +document.getElementById('w-price').value, yellow: +document.getElementById('t-price').value, red: +document.getElementById('r-price').value },
+    km:     { weight: +document.getElementById('w-km').value,    yellow: +document.getElementById('t-km').value,    red: +document.getElementById('r-km').value },
+    year:   { weight: +document.getElementById('w-year').value,  yellow: +document.getElementById('t-year').value,  red: +document.getElementById('r-year').value },
+    hand:   { weight: +document.getElementById('w-hand').value,  yellow: +document.getElementById('t-hand').value,  red: +document.getElementById('r-hand').value },
+  };
+}
+
+function buildPrompt(make, model, p, scoring) {
+  const criteria = [];
+  if (p.priceMin || p.priceMax) criteria.push(`מחיר: ${p.priceMin||'0'}-${p.priceMax||'ללא הגבלה'} ₪`);
+  if (p.yearMin || p.yearMax) criteria.push(`שנתון: ${p.yearMin||'ללא מינימום'}-${p.yearMax||'ללא מקסימום'}`);
+  if (p.kmMin || p.kmMax) criteria.push(`קילומטרז': ${p.kmMin||'0'}-${p.kmMax||'ללא הגבלה'} ק"מ`);
+  if (p.handMin || p.handMax) criteria.push(`יד: ${p.handMin||'1'}-${p.handMax||'ללא הגבלה'}`);
+  if (p.extra) criteria.push(`דרישות נוספות: ${p.extra}`);
+
+  const totalWeight = Object.values(scoring).reduce((s,v)=>s+v.weight,0)||100;
+
+  return `אתה מנוע חיפוש רכב ישראלי מקצועי. חפש ביד2 (yad2.co.il) מודעות עבור: ${make} ${model}
+
+קריטריוני חיפוש:
+${criteria.join('\n') || 'ללא הגבלות ספציפיות'}
+
+מנוע ציון (0-100) — חשוב: ציון מלא (100%) ניתן רק לערך האידיאלי, לא רק לכל ערך שבטווח:
+
+לכל פרמטר, חשב ציון פנימי 0-100 כך:
+- מחיר (משקל ${scoring.price.weight}%): 
+  * האידיאל = מחיר מינימום בטווח (או כמה שזול יותר). ציון = 100 × (1 - (מחיר - מינימום) / (מקסימום - מינימום)).
+  * אם אין מינימום, האידיאל = המחיר הנמוך ביותר שנמצא.
+  * חריגה ${scoring.price.yellow}% מעל המקסימום = ציון חלקי (מ-50 ל-0). חריגה ${scoring.price.red}% = קו אדום, פסילה מוחלטת.
+- קילומטרז' (משקל ${scoring.km.weight}%):
+  * האידיאל = ק"מ מינימום (או 0). ציון = 100 × (1 - (ק"מ - מינימום) / (מקסימום - מינימום)).
+  * חריגה ${scoring.km.yellow}% מעל המקסימום = ציון חלקי. חריגה ${scoring.km.red}% = פסילה.
+- שנתון (משקל ${scoring.year.weight}%):
+  * האידיאל = שנה מקסימום (הכי חדש). ציון = 100 × (שנה - מינימום) / (מקסימום - מינימום).
+  * חריגה ${scoring.year.yellow} שנים מחוץ לטווח = ציון חלקי. חריגה ${scoring.year.red} שנים = פסילה.
+- יד (משקל ${scoring.hand.weight}%):
+  * האידיאל = יד 1. ציון = 100 × (1 - (יד - 1) / 5).
+  * חריגה ${scoring.hand.yellow} ידיים מעל המקסימום = ציון חלקי. חריגה ${scoring.hand.red} = פסילה.
+
+ציון סופי = סכום (ציון_פרמטר × משקל) / ${totalWeight}.
+אם מודעה חוצה קו אדום כלשהו — אל תכלול אותה כלל.
+
+השב JSON בלבד (ללא backticks, ללא הסברים):
+{
+  "listings": [
+    {
+      "id": "מזהה ייחודי (צרף שנה_מחיר_קמ)",
+      "title": "כותרת המודעה",
+      "make": "${make}",
+      "model": "${model}",
+      "price": 123456,
+      "year": 2019,
+      "km": 85000,
+      "hand": 2,
+      "location": "עיר",
+      "url": "קישור אם ידוע",
+      "score": 82,
+      "scoreLabel": "high",
+      "priceFlag": "ok|yellow|red",
+      "kmFlag": "ok|yellow|red",
+      "yearFlag": "ok|yellow|red",
+      "handFlag": "ok|yellow|red",
+      "notes": "2-3 משפטים: יתרונות, חסרונות, האם המחיר הגיוני לשוק"
+    }
+  ]
+}
+
+scoreLabel: "high" (75+), "mid" (50-74), "low" (מתחת ל-50).
+החזר עד 5 מודעות רלוונטיות.`;
+}
+
+function addLog(msg) {
+  const el = document.getElementById('logBox');
+  const t = new Date().toLocaleTimeString('he-IL', {hour:'2-digit',minute:'2-digit'});
+  el.innerHTML = `<span style="color:var(--text3)">[${t}]</span> ${msg}\n` + el.innerHTML;
+}
+
+function setStatus(state, text) {
+  const pill = document.getElementById('statusPill');
+  const dot = pill.querySelector('.dot');
+  pill.className = 'status-pill ' + state;
+  document.getElementById('statusText').textContent = text;
+  dot.className = 'dot' + (state !== 'idle' ? ' pulse' : '');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+async function scanModel(make, model, params, scoring) {
+  const apiKey = getApiKey();
+  const prompt = buildPrompt(make, model, params, scoring);
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await resp.json();
+    const text = data.content.map(i => i.text || '').filter(Boolean).join('');
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) return [];
+    const parsed = JSON.parse(jsonMatch[0]);
+    return (parsed.listings || []).map(l => ({ ...l, scannedAt: new Date().toISOString(), isNew: !seenIds.has(l.id) }));
+  } catch(e) {
+    addLog(`שגיאה בחיפוש ${make} ${model}: ${e.message}`);
+    return [];
+  }
+}
+
+async function runAllScans() {
+  if (models.length === 0) { showToast('הוסף לפחות דגם אחד'); return; }
+  if (!getApiKey()) { showToast('הכנס מפתח API תחילה'); return; }
+  const params = getSharedParams();
+  const scoring = getScoringConfig();
+  scanCount++;
+  setStatus('scanning', `סורק... (${models.length} דגמים)`);
+  addLog(`סריקה #${scanCount} — ${models.length} דגמים`);
+
+  const promises = models.map(m => scanModel(m.make, m.model, params, scoring));
+  const results = await Promise.all(promises);
+  const flat = results.flat();
+
+  let newCount = 0;
+  flat.forEach(l => {
+    if (!seenIds.has(l.id)) {
+      seenIds.add(l.id);
+      allResults.unshift(l);
+      newCount++;
+    }
+  });
+
+  addLog(`נמצאו ${flat.length} מודעות, ${newCount} חדשות`);
+  if (newCount > 0) showToast(`${newCount} מודעות חדשות נמצאו!`);
+
+  document.getElementById('mainMeta').textContent = `${allResults.length} מודעות סה"כ · סריקה אחרונה: ${new Date().toLocaleTimeString('he-IL')}`;
+  setStatus(intervalId ? 'active' : 'idle', intervalId ? `פעיל · כל ${document.getElementById('intervalMin').value} דק'` : 'ממתין');
+  renderResults();
+
+  if ('Notification' in window && Notification.permission === 'granted' && newCount > 0) {
+    new Notification('יד2 Scout', { body: `נמצאו ${newCount} מודעות חדשות!` });
+  }
+}
+
+function setFilter(f, el) {
+  activeFilter = f;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderResults();
+}
+
+function renderResults() {
+  const filtered = activeFilter === 'all' ? allResults :
+    allResults.filter(l => l.scoreLabel === activeFilter || (activeFilter === 'mid' && l.scoreLabel === 'mid'));
+
+  const el = document.getElementById('resultsList');
+  if (filtered.length === 0) {
+    el.innerHTML = `<div class="empty"><div class="empty-icon">◉</div><div class="empty-text">${allResults.length === 0 ? 'הגדר דגמים והתחל ניטור' : 'אין מודעות בקטגוריה זו'}</div></div>`;
+    return;
+  }
+
+  el.innerHTML = filtered.map(l => {
+    const scoreClass = l.scoreLabel === 'high' ? 'high' : l.scoreLabel === 'mid' ? 'mid' : 'low';
+    const priceChipClass = l.priceFlag === 'ok' ? 'good' : l.priceFlag === 'yellow' ? 'warn' : '';
+    const kmChipClass = l.kmFlag === 'ok' ? 'good' : l.kmFlag === 'yellow' ? 'warn' : '';
+    const yearChipClass = l.yearFlag === 'ok' ? 'good' : l.yearFlag === 'yellow' ? 'warn' : '';
+    const handChipClass = l.handFlag === 'ok' ? 'good' : l.handFlag === 'yellow' ? 'warn' : '';
+    const time = new Date(l.scannedAt).toLocaleString('he-IL',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+
+    return `
+    <div class="result-card score-${scoreClass}">
+      <div class="card-top">
+        <div>
+          ${l.isNew ? '<span class="new-badge">חדש</span>' : ''}
+          <div class="card-title">${l.title}</div>
+          <div class="card-model-tag">${l.make} ${l.model}</div>
+        </div>
+        <div class="score-display">
+          <div class="score-num ${scoreClass}">${l.score}</div>
+          <div class="score-label">/100</div>
+        </div>
+      </div>
+      <div class="card-chips">
+        ${l.price ? `<span class="chip ${priceChipClass}">₪ ${Number(l.price).toLocaleString('he-IL')}</span>` : ''}
+        ${l.year ? `<span class="chip ${yearChipClass}">${l.year}</span>` : ''}
+        ${l.km ? `<span class="chip ${kmChipClass}">${Number(l.km).toLocaleString('he-IL')} ק"מ</span>` : ''}
+        ${l.hand ? `<span class="chip ${handChipClass}">יד ${l.hand}</span>` : ''}
+        ${l.location ? `<span class="chip">${l.location}</span>` : ''}
+      </div>
+      <div class="card-notes">${l.notes}</div>
+      ${l.url && l.url !== 'לא ידוע' && l.url !== '' ? `<a class="card-link" href="${l.url}" target="_blank">פתח מודעה →</a>` : ''}
+      <div class="card-time">${time}</div>
+    </div>`;
+  }).join('');
+}
+
+function startMonitor() {
+  if (models.length === 0) { showToast('הוסף לפחות דגם אחד'); return; }
+  const mins = parseInt(document.getElementById('intervalMin').value) || 30;
+  runAllScans();
+  intervalId = setInterval(runAllScans, mins * 60 * 1000);
+  document.getElementById('startBtn').style.display = 'none';
+  document.getElementById('stopBtn').style.display = 'block';
+  setStatus('active', `פעיל · כל ${mins} דק'`);
+  addLog(`ניטור הופעל, מחזור: ${mins} דקות`);
+  if ('Notification' in window) Notification.requestPermission();
+}
+
+function stopMonitor() {
+  clearInterval(intervalId);
+  intervalId = null;
+  document.getElementById('startBtn').style.display = 'block';
+  document.getElementById('stopBtn').style.display = 'none';
+  setStatus('idle', 'כבוי');
+  addLog('ניטור הופסק');
+}
+
+init();
+</script>
+</body>
+</html>
