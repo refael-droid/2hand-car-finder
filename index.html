@@ -67,11 +67,25 @@ body { background: var(--bg); color: var(--text); font-family: var(--sans); font
 .range-row span { text-align: center; color: var(--text3); font-size: 12px; }
 
 /* Models list */
-.model-item { background: var(--surface2); border: 1px solid var(--border2); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+.model-item { background: var(--surface2); border: 1px solid var(--border2); border-radius: 8px; margin-bottom: 8px; overflow: hidden; }
+.model-item-header { padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; cursor: default; }
 .model-item .model-name { font-weight: 500; font-size: 13px; }
 .model-item .model-sub { font-size: 11px; color: var(--text2); margin-top: 2px; font-family: var(--mono); }
-.model-item .del-btn { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 16px; padding: 0 4px; transition: color 0.15s; }
-.model-item .del-btn:hover { color: var(--red); }
+.model-actions { display: flex; gap: 4px; }
+.model-actions button { background: none; border: none; cursor: pointer; font-size: 14px; padding: 2px 5px; border-radius: 4px; transition: background 0.15s; }
+.edit-btn { color: var(--text3); }
+.edit-btn:hover { color: var(--accent); background: var(--accent-dim); }
+.del-btn { color: var(--text3); }
+.del-btn:hover { color: var(--red); background: var(--red-dim); }
+.model-params { border-top: 1px solid var(--border); padding: 10px 12px; display: none; }
+.model-params.open { display: block; }
+.model-params .field { margin-bottom: 8px; }
+.model-params label { display: block; font-size: 11px; color: var(--text3); margin-bottom: 3px; font-family: var(--mono); }
+.model-params input { width: 100%; background: var(--surface); border: 1px solid var(--border2); border-radius: 5px; padding: 5px 8px; color: var(--text); font-family: var(--sans); font-size: 12px; }
+.model-params input:focus { outline: none; border-color: var(--accent); }
+.model-params .range-row { display: grid; grid-template-columns: 1fr 14px 1fr; align-items: center; gap: 3px; }
+.model-params .range-row span { text-align: center; color: var(--text3); font-size: 11px; }
+.params-hint { font-size: 10px; color: var(--text3); font-family: var(--mono); margin-bottom: 8px; }
 .add-model-row { display: flex; gap: 6px; }
 .add-model-row input { flex: 1; }
 .btn-add { background: var(--accent-dim); border: 1px solid rgba(200,240,74,0.3); color: var(--accent); border-radius: 6px; padding: 7px 14px; cursor: pointer; font-family: var(--sans); font-size: 13px; white-space: nowrap; transition: background 0.15s; }
@@ -147,7 +161,46 @@ body { background: var(--bg); color: var(--text); font-family: var(--sans); font
 .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--accent); color: #000; padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 13px; z-index: 9999; transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1); pointer-events: none; }
 .toast.show { transform: translateX(-50%) translateY(0); }
 
-/* Scrollbar */
+/* Model params panel */
+.model-item { background: var(--surface2); border: 1px solid var(--border2); border-radius: 8px; margin-bottom: 8px; overflow: hidden; }
+.model-item-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; }
+.model-actions { display: flex; gap: 4px; }
+.edit-btn { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 14px; padding: 2px 6px; border-radius: 4px; transition: all 0.15s; }
+.edit-btn:hover { color: var(--accent); background: var(--accent-dim); }
+.del-btn { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 16px; padding: 0 4px; transition: color 0.15s; }
+.del-btn:hover { color: var(--red); }
+.model-params { max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.2s; padding: 0 12px; border-top: 0px solid var(--border); }
+.model-params.open { max-height: 400px; padding: 10px 12px; border-top: 1px solid var(--border); }
+.params-hint { font-size: 11px; color: var(--text3); font-family: var(--mono); margin-bottom: 8px; }
+.model-params .field { margin-bottom: 8px; }
+.model-params .field label { font-size: 11px; color: var(--text3); display: block; margin-bottom: 3px; }
+.model-params .range-row input { background: var(--surface); border: 1px solid var(--border2); border-radius: 5px; padding: 5px 7px; color: var(--text); font-size: 12px; font-family: var(--sans); width: 100%; }
+.model-params .range-row input:focus { outline: none; border-color: var(--accent); }
+.model-params input[type=text] { width: 100%; background: var(--surface); border: 1px solid var(--border2); border-radius: 5px; padding: 5px 7px; color: var(--text); font-size: 12px; font-family: var(--sans); }
+.model-params input[type=text]:focus { outline: none; border-color: var(--accent); }
+
+/* Scoring sliders */
+.score-param { margin-bottom: 18px; }
+.score-param-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.param-label { font-size: 12px; color: var(--text2); }
+.weight-input-wrap { display: flex; align-items: center; gap: 4px; }
+.weight-label { font-size: 11px; color: var(--text3); font-family: var(--mono); }
+.weight-input { width: 44px; background: var(--surface2); border: 1px solid var(--border2); border-radius: 5px; padding: 3px 5px; color: var(--text); font-family: var(--mono); font-size: 12px; text-align: center; }
+.weight-input:focus { outline: none; border-color: var(--accent); }
+.weight-pct { font-size: 11px; color: var(--text3); font-family: var(--mono); }
+.threshold-track-wrap { padding: 0 4px; }
+.threshold-track { position: relative; height: 6px; background: var(--surface2); border-radius: 3px; margin: 10px 0 4px; cursor: pointer; border: 1px solid var(--border); }
+.track-fill-green { position: absolute; top: 0; left: 0; height: 100%; background: var(--green); border-radius: 3px 0 0 3px; opacity: 0.5; pointer-events: none; }
+.track-fill-yellow { position: absolute; top: 0; height: 100%; background: var(--yellow); opacity: 0.5; pointer-events: none; }
+.track-fill-red { position: absolute; top: 0; height: 100%; background: var(--red); border-radius: 0 3px 3px 0; opacity: 0.4; pointer-events: none; }
+.thumb { position: absolute; top: 50%; transform: translate(-50%, -50%); width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--bg); cursor: grab; z-index: 2; transition: transform 0.1s; }
+.thumb:active { cursor: grabbing; transform: translate(-50%, -50%) scale(1.2); }
+.yellow-thumb { background: var(--yellow); }
+.red-thumb { background: var(--red); }
+.threshold-labels { position: relative; height: 30px; margin-top: 6px; }
+.threshold-labels span { font-family: var(--mono); font-size: 10px; position: absolute; white-space: nowrap; transition: top 0.15s; top: 0; transform: translateX(50%); }
+.tl-yellow { color: var(--yellow); }
+.tl-red { color: var(--red); }
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
@@ -176,12 +229,12 @@ body { background: var(--bg); color: var(--text); font-family: var(--sans); font
       <div class="field">
         <label>Anthropic API Key</label>
         <div style="display:flex;gap:6px;align-items:center">
-          <input type="password" id="apiKeyInput" placeholder="sk-ant-..." style="flex:1" oninput="onApiKeyChange()" />
+          <input type="password" id="apiKeyInput" placeholder="AIza..." style="flex:1" oninput="onApiKeyChange()" />
           <button onclick="toggleApiVis()" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text2);border-radius:6px;padding:7px 10px;cursor:pointer;font-size:13px" id="visBtn">👁</button>
         </div>
       </div>
       <div id="apiKeyStatus" style="font-family:var(--mono);font-size:11px;color:var(--text3);margin-top:4px">
-        הכנס מפתח להפעלה — <a href="https://console.anthropic.com/settings/keys" target="_blank" style="color:var(--accent);text-decoration:none">קבל מפתח ←</a>
+        הכנס מפתח להפעלה — <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--accent);text-decoration:none">קבל מפתח חינמי ←</a>
       </div>
     </div>
 
@@ -240,38 +293,111 @@ body { background: var(--bg); color: var(--text); font-family: var(--sans); font
     <!-- SCORING ENGINE -->
     <div class="section">
       <div class="section-label">מנוע ציון</div>
-      <div class="score-header">
-        <span style="text-align:right">פרמטר</span>
-        <span>משקל %</span>
-        <span>סף צהוב</span>
-        <span>קו אדום</span>
+
+      <!-- PRICE -->
+      <div class="score-param">
+        <div class="score-param-header">
+          <span class="param-label">מחיר (₪)</span>
+          <div class="weight-input-wrap">
+            <span class="weight-label">משקל</span>
+            <input type="number" id="w-price" value="35" min="0" max="100" class="weight-input" />
+            <span class="weight-pct">%</span>
+          </div>
+        </div>
+        <div class="threshold-track-wrap">
+          <div class="threshold-track" id="track-price">
+            <div class="track-fill-green" id="fill-green-price"></div>
+            <div class="track-fill-yellow" id="fill-yellow-price"></div>
+            <div class="track-fill-red" id="fill-red-price"></div>
+            <div class="thumb yellow-thumb" id="thumb-yellow-price" onmousedown="startDrag(event,'price','yellow')" ontouchstart="startDrag(event,'price','yellow')"></div>
+            <div class="thumb red-thumb" id="thumb-red-price" onmousedown="startDrag(event,'price','red')" ontouchstart="startDrag(event,'price','red')"></div>
+          </div>
+          <div class="threshold-labels">
+            <span class="tl-yellow" id="tv-yellow-price"></span>
+            <span class="tl-red" id="tv-red-price"></span>
+          </div>
+        </div>
       </div>
-      <div class="score-row">
-        <span class="param-name">מחיר</span>
-        <input type="number" id="w-price" value="35" min="0" max="100" />
-        <input type="number" id="t-price" value="10" min="0" title="סטייה % מהמקסימום שמפחיתה ניקוד" />
-        <input type="number" id="r-price" value="20" min="0" title="סטייה % מהמקסימום שפוסלת" />
+
+      <!-- KM -->
+      <div class="score-param">
+        <div class="score-param-header">
+          <span class="param-label">קילומטרז' (ק"מ)</span>
+          <div class="weight-input-wrap">
+            <span class="weight-label">משקל</span>
+            <input type="number" id="w-km" value="30" min="0" max="100" class="weight-input" />
+            <span class="weight-pct">%</span>
+          </div>
+        </div>
+        <div class="threshold-track-wrap">
+          <div class="threshold-track" id="track-km">
+            <div class="track-fill-green" id="fill-green-km"></div>
+            <div class="track-fill-yellow" id="fill-yellow-km"></div>
+            <div class="track-fill-red" id="fill-red-km"></div>
+            <div class="thumb yellow-thumb" id="thumb-yellow-km" onmousedown="startDrag(event,'km','yellow')" ontouchstart="startDrag(event,'km','yellow')"></div>
+            <div class="thumb red-thumb" id="thumb-red-km" onmousedown="startDrag(event,'km','red')" ontouchstart="startDrag(event,'km','red')"></div>
+          </div>
+          <div class="threshold-labels">
+            <span class="tl-yellow" id="tv-yellow-km"></span>
+            <span class="tl-red" id="tv-red-km"></span>
+          </div>
+        </div>
       </div>
-      <div class="score-row">
-        <span class="param-name">קילומטרז'</span>
-        <input type="number" id="w-km" value="30" min="0" max="100" />
-        <input type="number" id="t-km" value="10" min="0" />
-        <input type="number" id="r-km" value="25" min="0" />
+
+      <!-- YEAR -->
+      <div class="score-param">
+        <div class="score-param-header">
+          <span class="param-label">שנתון</span>
+          <div class="weight-input-wrap">
+            <span class="weight-label">משקל</span>
+            <input type="number" id="w-year" value="20" min="0" max="100" class="weight-input" />
+            <span class="weight-pct">%</span>
+          </div>
+        </div>
+        <div class="threshold-track-wrap">
+          <div class="threshold-track" id="track-year">
+            <div class="track-fill-green" id="fill-green-year"></div>
+            <div class="track-fill-yellow" id="fill-yellow-year"></div>
+            <div class="track-fill-red" id="fill-red-year"></div>
+            <div class="thumb yellow-thumb" id="thumb-yellow-year" onmousedown="startDrag(event,'year','yellow')" ontouchstart="startDrag(event,'year','yellow')"></div>
+            <div class="thumb red-thumb" id="thumb-red-year" onmousedown="startDrag(event,'year','red')" ontouchstart="startDrag(event,'year','red')"></div>
+          </div>
+          <div class="threshold-labels">
+            <span class="tl-yellow" id="tv-yellow-year"></span>
+            <span class="tl-red" id="tv-red-year"></span>
+          </div>
+        </div>
       </div>
-      <div class="score-row">
-        <span class="param-name">שנתון</span>
-        <input type="number" id="w-year" value="20" min="0" max="100" />
-        <input type="number" id="t-year" value="1" min="0" title="שנים מחוץ לטווח לפני פגיעה בציון" />
-        <input type="number" id="r-year" value="3" min="0" title="שנים מחוץ לטווח לפני פסילה" />
+
+      <!-- HAND -->
+      <div class="score-param">
+        <div class="score-param-header">
+          <span class="param-label">יד (בעלות)</span>
+          <div class="weight-input-wrap">
+            <span class="weight-label">משקל</span>
+            <input type="number" id="w-hand" value="15" min="0" max="100" class="weight-input" />
+            <span class="weight-pct">%</span>
+          </div>
+        </div>
+        <div class="threshold-track-wrap">
+          <div class="threshold-track" id="track-hand">
+            <div class="track-fill-green" id="fill-green-hand"></div>
+            <div class="track-fill-yellow" id="fill-yellow-hand"></div>
+            <div class="track-fill-red" id="fill-red-hand"></div>
+            <div class="thumb yellow-thumb" id="thumb-yellow-hand" onmousedown="startDrag(event,'hand','yellow')" ontouchstart="startDrag(event,'hand','yellow')"></div>
+            <div class="thumb red-thumb" id="thumb-red-hand" onmousedown="startDrag(event,'hand','red')" ontouchstart="startDrag(event,'hand','red')"></div>
+          </div>
+          <div class="threshold-labels">
+            <span class="tl-yellow" id="tv-yellow-hand"></span>
+            <span class="tl-red" id="tv-red-hand"></span>
+          </div>
+        </div>
       </div>
-      <div class="score-row">
-        <span class="param-name">יד</span>
-        <input type="number" id="w-hand" value="15" min="0" max="100" />
-        <input type="number" id="t-hand" value="1" min="0" />
-        <input type="number" id="r-hand" value="2" min="0" />
-      </div>
-      <div style="font-size:11px; color:var(--text3); margin-top:6px; line-height:1.5">
-        סף צהוב = % חריגה שמפחיתה ציון<br>קו אדום = % חריגה שפוסלת לחלוטין
+
+      <div style="font-size:11px;color:var(--text3);margin-top:8px;line-height:1.6;font-family:var(--mono)">
+        <span style="color:var(--green)">■</span> אידיאלי &nbsp;
+        <span style="color:var(--yellow)">■</span> סף צהוב &nbsp;
+        <span style="color:var(--red)">■</span> קו אדום (פסילה)
       </div>
     </div>
 
@@ -335,16 +461,16 @@ function onApiKeyChange() {
   const key = getApiKey();
   const status = document.getElementById('apiKeyStatus');
   if (!key) {
-    status.innerHTML = 'הכנס מפתח להפעלה — <a href="https://console.anthropic.com/settings/keys" target="_blank" style="color:var(--accent);text-decoration:none">קבל מפתח ←</a>';
+    status.innerHTML = 'הכנס מפתח להפעלה — <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--accent);text-decoration:none">קבל מפתח חינמי ←</a>';
     status.style.color = 'var(--text3)';
-  } else if (!key.startsWith('sk-ant-')) {
+  } else if (key.length < 20) {
     status.textContent = '⚠ מפתח לא נראה תקין';
     status.style.color = 'var(--yellow)';
   } else {
     status.textContent = '✓ מפתח נטען';
     status.style.color = 'var(--green)';
   }
-  if (key) sessionStorage.setItem('anthropic_key', key);
+  if (key) sessionStorage.setItem('gemini_key', key);
 }
 
 function toggleApiVis() {
@@ -360,7 +486,8 @@ const DEFAULT_MODELS = [
 function init() {
   models = [...DEFAULT_MODELS];
   renderModels();
-  const saved = sessionStorage.getItem('anthropic_key');
+  initSliders();
+  const saved = sessionStorage.getItem('gemini_key');
   if (saved) { document.getElementById('apiKeyInput').value = saved; onApiKeyChange(); }
 }
 
@@ -370,21 +497,84 @@ function renderModels() {
     el.innerHTML = '<div style="color:var(--text3);font-size:12px;margin-bottom:10px;font-family:var(--mono)">אין דגמים עדיין</div>';
     return;
   }
-  el.innerHTML = models.map((m, i) => `
-    <div class="model-item">
-      <div>
-        <div class="model-name">${m.make} ${m.model}</div>
+  el.innerHTML = models.map((m, i) => {
+    const p = m.params || {};
+    const hasOverride = m.params && Object.values(m.params).some(v => v !== '' && v !== undefined);
+    return `
+    <div class="model-item" id="model-item-${i}">
+      <div class="model-item-header">
+        <div>
+          <div class="model-name">${m.make} ${m.model} ${hasOverride ? '<span style="color:var(--accent);font-size:10px;font-family:var(--mono)">✎</span>' : ''}</div>
+        </div>
+        <div class="model-actions">
+          <button class="edit-btn" onclick="toggleModelParams(${i})" title="עריכת פרמטרים">✎</button>
+          <button class="del-btn" onclick="removeModel(${i})" title="מחק">×</button>
+        </div>
       </div>
-      <button class="del-btn" onclick="removeModel(${i})">×</button>
-    </div>
-  `).join('');
+      <div class="model-params" id="model-params-${i}">
+        <div class="params-hint">ריק = ישתמש בפרמטרים המשותפים</div>
+        <div class="field">
+          <label>מחיר (₪)</label>
+          <div class="range-row">
+            <input type="number" placeholder="מינימום" value="${p.priceMin||''}" onchange="setModelParam(${i},'priceMin',this.value)" />
+            <span>—</span>
+            <input type="number" placeholder="מקסימום" value="${p.priceMax||''}" onchange="setModelParam(${i},'priceMax',this.value)" />
+          </div>
+        </div>
+        <div class="field">
+          <label>שנתון</label>
+          <div class="range-row">
+            <input type="number" placeholder="מ-" value="${p.yearMin||''}" onchange="setModelParam(${i},'yearMin',this.value)" />
+            <span>—</span>
+            <input type="number" placeholder="עד" value="${p.yearMax||''}" onchange="setModelParam(${i},'yearMax',this.value)" />
+          </div>
+        </div>
+        <div class="field">
+          <label>קילומטרז'</label>
+          <div class="range-row">
+            <input type="number" placeholder="מ-" value="${p.kmMin||''}" onchange="setModelParam(${i},'kmMin',this.value)" />
+            <span>—</span>
+            <input type="number" placeholder="עד" value="${p.kmMax||''}" onchange="setModelParam(${i},'kmMax',this.value)" />
+          </div>
+        </div>
+        <div class="field">
+          <label>יד</label>
+          <div class="range-row">
+            <input type="number" placeholder="מ-" min="1" max="10" value="${p.handMin||''}" onchange="setModelParam(${i},'handMin',this.value)" />
+            <span>—</span>
+            <input type="number" placeholder="עד" min="1" max="10" value="${p.handMax||''}" onchange="setModelParam(${i},'handMax',this.value)" />
+          </div>
+        </div>
+        <div class="field">
+          <label>הערות ספציפיות</label>
+          <input type="text" placeholder="לדוגמה: אוטומטי בלבד" value="${p.extra||''}" onchange="setModelParam(${i},'extra',this.value)" />
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleModelParams(i) {
+  const panel = document.getElementById('model-params-' + i);
+  panel.classList.toggle('open');
+}
+
+function setModelParam(i, key, val) {
+  if (!models[i].params) models[i].params = {};
+  models[i].params[key] = val;
+  // re-render just the name indicator without closing the panel
+  const nameEl = document.querySelector(`#model-item-${i} .model-name`);
+  const hasOverride = Object.values(models[i].params).some(v => v !== '' && v !== undefined);
+  if (nameEl) nameEl.innerHTML = `${models[i].make} ${models[i].model} ${hasOverride ? '<span style="color:var(--accent);font-size:10px;font-family:var(--mono)">✎</span>' : ''}`;
 }
 
 function addModel() {
   const make = document.getElementById('newMake').value.trim();
   const model = document.getElementById('newModel').value.trim();
   if (!make || !model) return;
-  models.push({ make, model });
+  // copy last model's params as starting point
+  const lastParams = models.length > 0 ? { ...models[models.length - 1].params } : {};
+  models.push({ make, model, params: lastParams });
   document.getElementById('newMake').value = '';
   document.getElementById('newModel').value = '';
   renderModels();
@@ -409,12 +599,99 @@ function getSharedParams() {
   };
 }
 
+// Slider config per param
+const SLIDER_CONFIG = {
+  price: { min: 0,    max: 200000, step: 5000, yellowVal: 120000, redVal: 150000, format: v => (v/1000).toFixed(0)+'K₪' },
+  km:    { min: 0,    max: 300000, step: 5000, yellowVal: 150000, redVal: 200000, format: v => (v/1000).toFixed(0)+'Kק"מ' },
+  year:  { min: 2005, max: 2025,   step: 1,    yellowVal: 2018,   redVal: 2015,   format: v => String(v) },
+  hand:  { min: 1,    max: 8,      step: 1,    yellowVal: 3,      redVal: 5,      format: v => 'יד '+v },
+};
+
+function pct(val, cfg) { return Math.max(0, Math.min(100, (val - cfg.min) / (cfg.max - cfg.min) * 100)); }
+function valFromPct(p, cfg) {
+  const raw = cfg.min + p / 100 * (cfg.max - cfg.min);
+  return Math.round(raw / cfg.step) * cfg.step;
+}
+
+function updateSliderUI(param) {
+  const cfg = SLIDER_CONFIG[param];
+  const yVal = cfg.yellowVal, rVal = cfg.redVal;
+  const yPct = pct(yVal, cfg), rPct = pct(rVal, cfg);
+  const isYear = param === 'year';
+
+  if (isYear) {
+    const low = Math.min(yPct, rPct), high = Math.max(yPct, rPct);
+    document.getElementById('fill-red-'+param).style.cssText = `left:0%;width:${low}%;border-radius:3px 0 0 3px`;
+    document.getElementById('fill-yellow-'+param).style.cssText = `left:${low}%;width:${high-low}%`;
+    document.getElementById('fill-green-'+param).style.cssText = `left:${high}%;width:${100-high}%;border-radius:0 3px 3px 0`;
+  } else {
+    const low = Math.min(yPct, rPct), high = Math.max(yPct, rPct);
+    document.getElementById('fill-green-'+param).style.cssText = `left:0%;width:${low}%;border-radius:3px 0 0 3px`;
+    document.getElementById('fill-yellow-'+param).style.cssText = `left:${low}%;width:${high-low}%`;
+    document.getElementById('fill-red-'+param).style.cssText = `left:${high}%;width:${100-high}%;border-radius:0 3px 3px 0`;
+  }
+
+  document.getElementById('thumb-yellow-'+param).style.left = yPct + '%';
+  document.getElementById('thumb-red-'+param).style.left = rPct + '%';
+
+  const yLbl = document.getElementById('tv-yellow-'+param);
+  const rLbl = document.getElementById('tv-red-'+param);
+
+  yLbl.style.right = '';
+  rLbl.style.right = '';
+  yLbl.style.left = yPct + '%';
+  rLbl.style.left = rPct + '%';
+  yLbl.textContent = cfg.format(yVal);
+  rLbl.textContent = cfg.format(rVal);
+
+  // Collision avoidance: stack vertically when thumbs are close
+  const dist = Math.abs(yPct - rPct);
+  if (dist < 14) {
+    yLbl.style.top = '0px';
+    rLbl.style.top = '14px';
+  } else {
+    yLbl.style.top = '0px';
+    rLbl.style.top = '0px';
+  }
+}
+
+function initSliders() { Object.keys(SLIDER_CONFIG).forEach(p => updateSliderUI(p)); }
+
+let dragging = null;
+function startDrag(e, param, thumb) {
+  e.preventDefault();
+  dragging = { param, thumb };
+  document.addEventListener('mousemove', onDrag);
+  document.addEventListener('mouseup', stopDrag);
+  document.addEventListener('touchmove', onDrag, { passive: false });
+  document.addEventListener('touchend', stopDrag);
+}
+function onDrag(e) {
+  if (!dragging) return;
+  e.preventDefault();
+  const { param, thumb } = dragging;
+  const track = document.getElementById('track-' + param);
+  const rect = track.getBoundingClientRect();
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const rawPct = (rect.right - clientX) / rect.width * 100;
+  const clampedPct = Math.max(0, Math.min(100, rawPct));
+  SLIDER_CONFIG[param][thumb + 'Val'] = valFromPct(clampedPct, SLIDER_CONFIG[param]);
+  updateSliderUI(param);
+}
+function stopDrag() {
+  dragging = null;
+  document.removeEventListener('mousemove', onDrag);
+  document.removeEventListener('mouseup', stopDrag);
+  document.removeEventListener('touchmove', onDrag);
+  document.removeEventListener('touchend', stopDrag);
+}
+
 function getScoringConfig() {
   return {
-    price:  { weight: +document.getElementById('w-price').value, yellow: +document.getElementById('t-price').value, red: +document.getElementById('r-price').value },
-    km:     { weight: +document.getElementById('w-km').value,    yellow: +document.getElementById('t-km').value,    red: +document.getElementById('r-km').value },
-    year:   { weight: +document.getElementById('w-year').value,  yellow: +document.getElementById('t-year').value,  red: +document.getElementById('r-year').value },
-    hand:   { weight: +document.getElementById('w-hand').value,  yellow: +document.getElementById('t-hand').value,  red: +document.getElementById('r-hand').value },
+    price: { weight: +document.getElementById('w-price').value, yellow: SLIDER_CONFIG.price.yellowVal, red: SLIDER_CONFIG.price.redVal },
+    km:    { weight: +document.getElementById('w-km').value,    yellow: SLIDER_CONFIG.km.yellowVal,    red: SLIDER_CONFIG.km.redVal    },
+    year:  { weight: +document.getElementById('w-year').value,  yellow: SLIDER_CONFIG.year.yellowVal,  red: SLIDER_CONFIG.year.redVal  },
+    hand:  { weight: +document.getElementById('w-hand').value,  yellow: SLIDER_CONFIG.hand.yellowVal,  red: SLIDER_CONFIG.hand.redVal  },
   };
 }
 
@@ -507,20 +784,20 @@ async function scanModel(make, model, params, scoring) {
   const apiKey = getApiKey();
   const prompt = buildPrompt(make, model, params, scoring);
   try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
-        messages: [{ role: 'user', content: prompt }]
+        contents: [{ parts: [{ text: prompt }] }],
+        tools: [{ google_search: {} }],
+        generationConfig: { temperature: 0.1, maxOutputTokens: 1500 }
       })
     });
     const data = await resp.json();
-    const text = data.content.map(i => i.text || '').filter(Boolean).join('');
+    if (data.error) { addLog(`שגיאת API: ${data.error.message}`); return []; }
+    const text = data.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || '';
     const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) return [];
+    if (!jsonMatch) { addLog(`לא נמצא JSON בתשובה עבור ${make} ${model}`); return []; }
     const parsed = JSON.parse(jsonMatch[0]);
     return (parsed.listings || []).map(l => ({ ...l, scannedAt: new Date().toISOString(), isNew: !seenIds.has(l.id) }));
   } catch(e) {
@@ -532,13 +809,28 @@ async function scanModel(make, model, params, scoring) {
 async function runAllScans() {
   if (models.length === 0) { showToast('הוסף לפחות דגם אחד'); return; }
   if (!getApiKey()) { showToast('הכנס מפתח API תחילה'); return; }
-  const params = getSharedParams();
+  const sharedParams = getSharedParams();
   const scoring = getScoringConfig();
   scanCount++;
   setStatus('scanning', `סורק... (${models.length} דגמים)`);
   addLog(`סריקה #${scanCount} — ${models.length} דגמים`);
 
-  const promises = models.map(m => scanModel(m.make, m.model, params, scoring));
+  const promises = models.map(m => {
+    // merge: model-specific overrides shared (empty string = use shared)
+    const mp = m.params || {};
+    const merged = {
+      priceMin: mp.priceMin || sharedParams.priceMin,
+      priceMax: mp.priceMax || sharedParams.priceMax,
+      yearMin:  mp.yearMin  || sharedParams.yearMin,
+      yearMax:  mp.yearMax  || sharedParams.yearMax,
+      kmMin:    mp.kmMin    || sharedParams.kmMin,
+      kmMax:    mp.kmMax    || sharedParams.kmMax,
+      handMin:  mp.handMin  || sharedParams.handMin,
+      handMax:  mp.handMax  || sharedParams.handMax,
+      extra:    mp.extra !== undefined && mp.extra !== '' ? mp.extra : sharedParams.extra,
+    };
+    return scanModel(m.make, m.model, merged, scoring);
+  });
   const results = await Promise.all(promises);
   const flat = results.flat();
 
