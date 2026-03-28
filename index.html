@@ -7,137 +7,144 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Heebo:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0d0d0d; --surface: #161616; --surface2: #1e1e1e; --surface3: #242424;
-  --border: #2a2a2a; --border2: #333;
-  --text: #e8e8e8; --text2: #888; --text3: #555;
-  --accent: #c8f04a; --accent-dim: rgba(200,240,74,0.12);
-  --red: #ff4444; --red-dim: rgba(255,68,68,0.12);
-  --yellow: #f0b429; --yellow-dim: rgba(240,180,41,0.12);
-  --green: #4ade80; --green-dim: rgba(74,222,128,0.1);
-  --mono: 'IBM Plex Mono', monospace; --sans: 'Heebo', sans-serif;
+  --bg:#0d0d0d;--surface:#161616;--s2:#1e1e1e;--s3:#242424;
+  --b:#2a2a2a;--b2:#333;
+  --tx:#e8e8e8;--tx2:#888;--tx3:#555;
+  --ac:#c8f04a;--acd:rgba(200,240,74,0.12);
+  --red:#ff4444;--redd:rgba(255,68,68,0.12);
+  --yel:#f0b429;--yeld:rgba(240,180,41,0.12);
+  --grn:#4ade80;--grnd:rgba(74,222,128,0.1);
+  --mono:'IBM Plex Mono',monospace;--sans:'Heebo',sans-serif;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 14px; min-height: 100vh; }
-.app { display: grid; grid-template-columns: 340px 1fr; min-height: 100vh; }
-.sidebar { background: var(--surface); border-left: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; }
-.main { padding: 24px; overflow-y: auto; }
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:var(--sans);font-size:14px;min-height:100vh}
+.app{display:grid;grid-template-columns:360px 1fr;min-height:100vh}
+.sidebar{background:var(--surface);border-left:1px solid var(--b);display:flex;flex-direction:column;overflow-y:auto;position:sticky;top:0;height:100vh}
+.main{padding:24px;overflow-y:auto}
 
-.sidebar-header { padding: 18px 20px 14px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
-.logo { font-family: var(--mono); font-size: 10px; color: var(--text3); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 3px; }
-.logo-title { font-size: 20px; font-weight: 700; letter-spacing: -0.03em; }
-.logo-title span { color: var(--accent); }
-.status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 20px; font-family: var(--mono); font-size: 11px; margin-top: 8px; }
-.status-pill.idle { background: var(--surface2); color: var(--text3); border: 1px solid var(--border); }
-.status-pill.active { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(200,240,74,0.3); }
-.status-pill.scanning { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(240,180,41,0.3); }
-.dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-.dot.pulse { animation: blink 1s infinite; }
-@keyframes blink { 0%,100%{opacity:1}50%{opacity:0.2} }
+/* Header */
+.sh{padding:16px 20px 12px;border-bottom:1px solid var(--b);flex-shrink:0}
+.logo{font-family:var(--mono);font-size:10px;color:var(--tx3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:3px}
+.logo-title{font-size:20px;font-weight:700;letter-spacing:-.03em}
+.logo-title span{color:var(--ac)}
+.spill{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:20px;font-family:var(--mono);font-size:11px;margin-top:8px}
+.spill.idle{background:var(--s2);color:var(--tx3);border:1px solid var(--b)}
+.spill.active{background:var(--acd);color:var(--ac);border:1px solid rgba(200,240,74,.3)}
+.spill.scanning{background:var(--yeld);color:var(--yel);border:1px solid rgba(240,180,41,.3)}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.dot.pulse{animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 
-.section { padding: 14px 20px; border-bottom: 1px solid var(--border); }
-.section-label { font-family: var(--mono); font-size: 10px; color: var(--text3); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px; }
+/* Section */
+.sec{padding:12px 18px;border-bottom:1px solid var(--b)}
+.sec-lbl{font-family:var(--mono);font-size:10px;color:var(--tx3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}
 
-.field { margin-bottom: 9px; }
-.field label { display: block; font-size: 12px; color: var(--text2); margin-bottom: 3px; }
-.field input { width: 100%; background: var(--surface2); border: 1px solid var(--border2); border-radius: 6px; padding: 7px 10px; color: var(--text); font-family: var(--sans); font-size: 13px; }
-.field input:focus { outline: none; border-color: var(--accent); }
-.field input::placeholder { color: var(--text3); }
-.range-row { display: grid; grid-template-columns: 1fr 16px 1fr; align-items: center; gap: 4px; }
-.range-row span { text-align: center; color: var(--text3); font-size: 12px; }
+/* Fields */
+.f{margin-bottom:8px}
+.f label{display:block;font-size:11px;color:var(--tx2);margin-bottom:3px}
+.f input{width:100%;background:var(--s2);border:1px solid var(--b2);border-radius:6px;padding:6px 9px;color:var(--tx);font-family:var(--sans);font-size:12px}
+.f input:focus{outline:none;border-color:var(--ac)}
+.f input::placeholder{color:var(--tx3)}
+.rr{display:grid;grid-template-columns:1fr 14px 1fr;align-items:center;gap:3px}
+.rr span{text-align:center;color:var(--tx3);font-size:11px}
 
-.api-row { display: flex; gap: 6px; }
-.api-row input { flex: 1; background: var(--surface2); border: 1px solid var(--border2); border-radius: 6px; padding: 7px 10px; color: var(--text); font-family: var(--sans); font-size: 13px; }
-.api-row input:focus { outline: none; border-color: var(--accent); }
-.api-row input::placeholder { color: var(--text3); }
-.icon-btn { background: var(--surface2); border: 1px solid var(--border2); color: var(--text2); border-radius: 6px; padding: 0 10px; cursor: pointer; font-size: 14px; }
-.api-status { font-family: var(--mono); font-size: 11px; color: var(--text3); margin-top: 5px; }
+/* API */
+.api-row{display:flex;gap:6px}
+.api-row input{flex:1;background:var(--s2);border:1px solid var(--b2);border-radius:6px;padding:7px 10px;color:var(--tx);font-family:var(--sans);font-size:13px}
+.api-row input:focus{outline:none;border-color:var(--ac)}
+.api-row input::placeholder{color:var(--tx3)}
+.iBtn{background:var(--s2);border:1px solid var(--b2);color:var(--tx2);border-radius:6px;padding:0 10px;cursor:pointer;font-size:13px}
+.api-st{font-family:var(--mono);font-size:11px;color:var(--tx3);margin-top:5px}
+
+/* Global weights strip */
+.weights-strip{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px}
+.ws-item{display:flex;flex-direction:column;align-items:center;gap:3px}
+.ws-item label{font-size:10px;color:var(--tx3);font-family:var(--mono);text-align:center}
+.ws-item input{width:48px;background:var(--s2);border:1px solid var(--b2);border-radius:5px;padding:4px 4px;color:var(--tx);font-family:var(--mono);font-size:12px;text-align:center}
+.ws-item input:focus{outline:none;border-color:var(--ac)}
+.ws-item span{font-size:10px;color:var(--tx3);font-family:var(--mono)}
 
 /* Car accordion */
-.cars-list { display: flex; flex-direction: column; gap: 5px; margin-bottom: 8px; }
-.car-card { background: var(--surface2); border: 1px solid var(--border2); border-radius: 8px; overflow: hidden; }
-.car-head { display: flex; align-items: center; gap: 8px; padding: 9px 12px; cursor: pointer; user-select: none; transition: background 0.15s; }
-.car-head:hover { background: var(--surface3); }
-.car-name { font-size: 13px; font-weight: 500; flex: 1; }
-.car-chevron { font-size: 9px; color: var(--text3); transition: transform 0.2s; }
-.car-card.open .car-chevron { transform: rotate(180deg); }
-.car-del { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 15px; padding: 0 3px; transition: color 0.15s; line-height: 1; }
-.car-del:hover { color: var(--red); }
-.override-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
-.car-body { display: none; padding: 8px 12px 12px; border-top: 1px solid var(--border); }
-.car-card.open .car-body { display: block; }
-.params-hint { font-size: 11px; color: var(--text3); font-family: var(--mono); margin-bottom: 8px; }
-.car-body .field { margin-bottom: 7px; }
-.car-body .field label { font-size: 11px; }
-.car-body .field input { font-size: 12px; padding: 5px 8px; background: var(--surface); }
+.cars-list{display:flex;flex-direction:column;gap:5px;margin-bottom:8px}
+.cc{background:var(--s2);border:1px solid var(--b2);border-radius:8px;overflow:hidden}
+.cc-head{display:flex;align-items:center;gap:7px;padding:9px 12px;cursor:pointer;user-select:none;transition:background .15s}
+.cc-head:hover{background:var(--s3)}
+.cc-name{font-size:13px;font-weight:500;flex:1}
+.cc-chev{font-size:9px;color:var(--tx3);transition:transform .2s}
+.cc.open .cc-chev{transform:rotate(180deg)}
+.cc-del{background:none;border:none;color:var(--tx3);cursor:pointer;font-size:15px;padding:0 3px;line-height:1;transition:color .15s}
+.cc-del:hover{color:var(--red)}
+.ov-dot{width:5px;height:5px;border-radius:50%;background:var(--ac);flex-shrink:0}
+.cc-body{display:none;padding:10px 12px 14px;border-top:1px solid var(--b)}
+.cc.open .cc-body{display:block}
+.params-hint{font-size:11px;color:var(--tx3);font-family:var(--mono);margin-bottom:10px}
 
-.add-car-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 6px; }
-.add-car-row input { background: var(--surface2); border: 1px solid var(--border2); border-radius: 6px; padding: 7px 9px; color: var(--text); font-size: 13px; font-family: var(--sans); }
-.add-car-row input::placeholder { color: var(--text3); }
-.add-car-row input:focus { outline: none; border-color: var(--accent); }
-.btn-add { background: var(--accent-dim); border: 1px solid rgba(200,240,74,0.3); color: var(--accent); border-radius: 6px; padding: 7px 12px; cursor: pointer; font-size: 13px; font-family: var(--sans); }
-.btn-add:hover { background: rgba(200,240,74,0.2); }
+/* Inline sliders inside car body */
+.isl{margin-bottom:12px}
+.isl-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.isl-lbl{font-size:11px;color:var(--tx2)}
+.track{position:relative;height:5px;background:var(--s3);border-radius:3px;border:1px solid var(--b);margin-bottom:0}
+.tf{position:absolute;top:0;height:100%;pointer-events:none}
+.tf.g{background:var(--grn);opacity:.5}
+.tf.y{background:var(--yel);opacity:.55}
+.tf.r{background:var(--red);opacity:.45}
+.thumb{position:absolute;top:50%;transform:translate(-50%,-50%);width:13px;height:13px;border-radius:50%;border:2px solid var(--bg);cursor:grab;z-index:3}
+.thumb:active{cursor:grabbing}
+.thumb.ty{background:var(--yel)}
+.thumb.tr{background:var(--red)}
+.lbl-row{position:relative;height:26px;margin-top:3px}
+.lbl{position:absolute;font-family:var(--mono);font-size:10px;white-space:nowrap;transform:translateX(50%);transition:top .12s;top:0}
+.lbl.ly{color:var(--yel)}
+.lbl.lr{color:var(--red)}
+.sl-legend{font-size:10px;color:var(--tx3);font-family:var(--mono);margin-top:6px}
 
-/* Sliders */
-.score-param { margin-bottom: 14px; }
-.score-ph { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-.score-ph .pl { font-size: 12px; color: var(--text2); }
-.ww { display: flex; align-items: center; gap: 4px; }
-.ww span { font-size: 11px; color: var(--text3); font-family: var(--mono); }
-.wi { width: 40px; background: var(--surface2); border: 1px solid var(--border2); border-radius: 5px; padding: 3px 4px; color: var(--text); font-family: var(--mono); font-size: 12px; text-align: center; }
-.wi:focus { outline: none; border-color: var(--accent); }
-.track { position: relative; height: 6px; background: var(--surface2); border-radius: 3px; margin: 10px 0 0; border: 1px solid var(--border); }
-.tf { position: absolute; top: 0; height: 100%; pointer-events: none; }
-.tf.g { background: var(--green); opacity: 0.5; }
-.tf.y { background: var(--yellow); opacity: 0.5; }
-.tf.r { background: var(--red); opacity: 0.45; }
-.thumb { position: absolute; top: 50%; transform: translate(-50%,-50%); width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--bg); cursor: grab; z-index: 3; }
-.thumb:active { cursor: grabbing; }
-.thumb.ty { background: var(--yellow); }
-.thumb.tr { background: var(--red); }
-.lbl-row { position: relative; height: 30px; margin-top: 5px; }
-.lbl { position: absolute; font-family: var(--mono); font-size: 10px; white-space: nowrap; transform: translateX(50%); transition: top 0.12s; top: 0; }
-.lbl.ly { color: var(--yellow); }
-.lbl.lr { color: var(--red); }
-.score-legend { font-size: 11px; color: var(--text3); margin-top: 6px; font-family: var(--mono); line-height: 1.8; }
+/* Add car */
+.add-row{display:grid;grid-template-columns:1fr 1fr auto;gap:5px}
+.add-row input{background:var(--s2);border:1px solid var(--b2);border-radius:6px;padding:7px 9px;color:var(--tx);font-size:13px;font-family:var(--sans)}
+.add-row input::placeholder{color:var(--tx3)}
+.add-row input:focus{outline:none;border-color:var(--ac)}
+.btn-add{background:var(--acd);border:1px solid rgba(200,240,74,.3);color:var(--ac);border-radius:6px;padding:7px 11px;cursor:pointer;font-size:13px;font-family:var(--sans)}
+.btn-add:hover{background:rgba(200,240,74,.2)}
 
-.btn-primary { width: 100%; background: var(--accent); color: #000; border: none; border-radius: 8px; padding: 11px; font-family: var(--sans); font-size: 14px; font-weight: 700; cursor: pointer; }
-.btn-primary:hover { opacity: 0.9; }
-.btn-stop { width: 100%; background: var(--red-dim); border: 1px solid rgba(255,68,68,0.3); color: var(--red); border-radius: 8px; padding: 10px; font-family: var(--sans); font-size: 14px; cursor: pointer; margin-top: 8px; }
-.btn-sec { width: 100%; background: var(--surface2); border: 1px solid var(--border2); color: var(--text2); border-radius: 8px; padding: 9px; font-family: var(--sans); font-size: 13px; cursor: pointer; margin-top: 8px; }
-.btn-sec:hover { border-color: var(--text2); color: var(--text); }
-.log-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; font-family: var(--mono); font-size: 11px; color: var(--text3); max-height: 70px; overflow-y: auto; margin-top: 10px; line-height: 1.7; }
+/* Buttons */
+.btn-p{width:100%;background:var(--ac);color:#000;border:none;border-radius:8px;padding:11px;font-family:var(--sans);font-size:14px;font-weight:700;cursor:pointer}
+.btn-p:hover{opacity:.9}
+.btn-stop{width:100%;background:var(--redd);border:1px solid rgba(255,68,68,.3);color:var(--red);border-radius:8px;padding:10px;font-family:var(--sans);font-size:14px;cursor:pointer;margin-top:8px}
+.btn-s{width:100%;background:var(--s2);border:1px solid var(--b2);color:var(--tx2);border-radius:8px;padding:9px;font-family:var(--sans);font-size:13px;cursor:pointer;margin-top:8px}
+.btn-s:hover{border-color:var(--tx2);color:var(--tx)}
+.log{background:var(--s2);border:1px solid var(--b);border-radius:6px;padding:7px 9px;font-family:var(--mono);font-size:11px;color:var(--tx3);max-height:68px;overflow-y:auto;margin-top:10px;line-height:1.7}
 
-.main-title { font-size: 22px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 4px; }
-.main-meta { font-family: var(--mono); font-size: 11px; color: var(--text3); margin-bottom: 16px; }
-.filter-bar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
-.fchip { background: var(--surface); border: 1px solid var(--border2); color: var(--text2); border-radius: 20px; padding: 5px 14px; font-size: 12px; cursor: pointer; font-family: var(--mono); }
-.fchip.active { background: var(--accent-dim); border-color: rgba(200,240,74,0.4); color: var(--accent); }
-
-.rc { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; position: relative; overflow: hidden; }
-.rc::before { content:''; position:absolute; top:0; right:0; width:3px; height:100%; }
-.rc.high::before { background: var(--green); }
-.rc.mid::before { background: var(--yellow); }
-.rc.low::before { background: var(--red); }
-.rc-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
-.rc-title { font-size: 15px; font-weight: 600; }
-.rc-tag { font-size: 11px; color: var(--text3); margin-top: 2px; font-family: var(--mono); }
-.snum { font-family: var(--mono); font-size: 22px; font-weight: 500; line-height: 1; }
-.snum.high{color:var(--green)} .snum.mid{color:var(--yellow)} .snum.low{color:var(--red)}
-.slbl { font-family: var(--mono); font-size: 10px; color: var(--text3); }
-.chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
-.ch { background: var(--surface2); border: 1px solid var(--border); color: var(--text2); border-radius: 5px; padding: 2px 8px; font-size: 12px; font-family: var(--mono); }
-.ch.g { background: var(--green-dim); border-color: rgba(74,222,128,0.3); color: var(--green); }
-.ch.w { background: var(--yellow-dim); border-color: rgba(240,180,41,0.4); color: var(--yellow); }
-.rc-notes { font-size: 12px; color: var(--text2); line-height: 1.6; border-top: 1px solid var(--border); padding-top: 8px; }
-.rc-link { display: inline-block; margin-top: 6px; font-family: var(--mono); font-size: 11px; color: var(--accent); text-decoration: none; }
-.rc-time { font-family: var(--mono); font-size: 10px; color: var(--text3); margin-top: 5px; }
-.nb { background: var(--accent); color: #000; font-size: 10px; font-weight: 700; border-radius: 3px; padding: 1px 5px; margin-left: 6px; font-family: var(--mono); }
-.empty { text-align: center; padding: 60px 0; color: var(--text3); }
-.empty-icon { font-size: 36px; margin-bottom: 10px; opacity: 0.4; }
-.empty-text { font-family: var(--mono); font-size: 12px; }
-.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(60px); background: var(--accent); color: #000; padding: 10px 22px; border-radius: 8px; font-weight: 600; font-size: 13px; z-index: 9999; transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); pointer-events: none; }
-.toast.show { transform: translateX(-50%) translateY(0); }
-::-webkit-scrollbar{width:3px} ::-webkit-scrollbar-track{background:transparent} ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+/* Main */
+.main-title{font-size:22px;font-weight:700;letter-spacing:-.03em;margin-bottom:4px}
+.main-meta{font-family:var(--mono);font-size:11px;color:var(--tx3);margin-bottom:16px}
+.fbar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.fc{background:var(--surface);border:1px solid var(--b2);color:var(--tx2);border-radius:20px;padding:5px 14px;font-size:12px;cursor:pointer;font-family:var(--mono)}
+.fc.active{background:var(--acd);border-color:rgba(200,240,74,.4);color:var(--ac)}
+.rc{background:var(--surface);border:1px solid var(--b);border-radius:10px;padding:14px 16px;margin-bottom:10px;position:relative;overflow:hidden}
+.rc::before{content:'';position:absolute;top:0;right:0;width:3px;height:100%}
+.rc.high::before{background:var(--grn)}
+.rc.mid::before{background:var(--yel)}
+.rc.low::before{background:var(--red)}
+.rc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.rc-title{font-size:15px;font-weight:600}
+.rc-tag{font-size:11px;color:var(--tx3);margin-top:2px;font-family:var(--mono)}
+.snum{font-family:var(--mono);font-size:22px;font-weight:500;line-height:1}
+.snum.high{color:var(--grn)}.snum.mid{color:var(--yel)}.snum.low{color:var(--red)}
+.slbl-s{font-family:var(--mono);font-size:10px;color:var(--tx3)}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+.ch{background:var(--s2);border:1px solid var(--b);color:var(--tx2);border-radius:5px;padding:2px 8px;font-size:12px;font-family:var(--mono)}
+.ch.g{background:var(--grnd);border-color:rgba(74,222,128,.3);color:var(--grn)}
+.ch.w{background:var(--yeld);border-color:rgba(240,180,41,.4);color:var(--yel)}
+.rc-notes{font-size:12px;color:var(--tx2);line-height:1.6;border-top:1px solid var(--b);padding-top:8px}
+.rc-link{display:inline-block;margin-top:6px;font-family:var(--mono);font-size:11px;color:var(--ac);text-decoration:none}
+.rc-time{font-family:var(--mono);font-size:10px;color:var(--tx3);margin-top:5px}
+.nb{background:var(--ac);color:#000;font-size:10px;font-weight:700;border-radius:3px;padding:1px 5px;margin-left:5px;font-family:var(--mono)}
+.empty{text-align:center;padding:60px 0;color:var(--tx3)}
+.empty-icon{font-size:36px;margin-bottom:10px;opacity:.4}
+.empty-text{font-family:var(--mono);font-size:12px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--ac);color:#000;padding:10px 22px;border-radius:8px;font-weight:600;font-size:13px;z-index:9999;transition:transform .3s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
 </style>
 </head>
 <body>
@@ -145,281 +152,375 @@ body { background: var(--bg); color: var(--text); font-family: var(--sans); font
 <div class="app">
 
 <div class="sidebar">
-  <div class="sidebar-header">
-    <div class="logo">car monitor</div>
-    <div class="logo-title">יד<span>2</span> Scout</div>
-    <div class="status-pill idle" id="spill"><div class="dot" id="sdot"></div><span id="stxt">כבוי</span></div>
+  <div class="sh">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div>
+        <div class="logo">car monitor</div>
+        <div class="logo-title">יד<span>2</span> Scout</div>
+      </div>
+      <div style="text-align:left">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--tx3);margin-bottom:4px">v2.4</div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--tx3)" id="tokenDisplay">טוקנים: —</div>
+      </div>
+    </div>
+    <div class="spill idle" id="spill"><div class="dot" id="sdot"></div><span id="stxt">כבוי</span></div>
   </div>
 
-  <div class="section">
-    <div class="section-label">מפתח Gemini API</div>
+  <div class="sec">
+    <div class="sec-lbl">מפתח Gemini API</div>
     <div class="api-row">
       <input type="password" id="apiKey" placeholder="AIza..." oninput="onKey()"/>
-      <button class="icon-btn" onclick="toggleVis()">👁</button>
+      <button class="iBtn" onclick="toggleVis()">👁</button>
     </div>
-    <div class="api-status" id="apiSt">הכנס מפתח — <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--accent);text-decoration:none">קבל חינמי ←</a></div>
+    <div class="api-st" id="apiSt">הכנס מפתח — <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--ac);text-decoration:none">קבל חינמי ←</a></div>
   </div>
 
-  <div class="section">
-    <div class="section-label">רכבים לחיפוש</div>
+  <div class="sec">
+    <div class="sec-lbl">משקלי ציון (גלובלי)</div>
+    <div class="weights-strip">
+      <div class="ws-item"><label>מחיר</label><input type="number" id="w-price" value="35" min="0" max="100" oninput="validateWeights()"/><span>%</span></div>
+      <div class="ws-item"><label>ק"מ</label><input type="number" id="w-km" value="30" min="0" max="100" oninput="validateWeights()"/><span>%</span></div>
+      <div class="ws-item"><label>שנתון</label><input type="number" id="w-year" value="20" min="0" max="100" oninput="validateWeights()"/><span>%</span></div>
+      <div class="ws-item"><label>יד</label><input type="number" id="w-hand" value="15" min="0" max="100" oninput="validateWeights()"/><span>%</span></div>
+    </div>
+    <div id="w-total" style="font-size:10px;font-family:var(--mono);margin-top:7px;color:var(--tx3)">סה"כ: 100% ✓</div>
+    <div style="font-size:10px;color:var(--tx3);font-family:var(--mono);margin-top:3px">קווי צהוב/אדום — בתוך כל רכב בנפרד</div>
+  </div>
+
+  <div class="sec">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div class="sec-lbl" style="margin-bottom:0">רכבים לחיפוש</div>
+      <div style="display:flex;gap:5px">
+        <input type="text" id="nMake" placeholder="יצרן" onkeydown="if(event.key==='Enter')document.getElementById('nModel').focus()" style="width:72px;background:var(--s2);border:1px solid var(--b2);border-radius:6px;padding:4px 7px;color:var(--tx);font-size:12px;font-family:var(--sans)"/>
+        <input type="text" id="nModel" placeholder="דגם" onkeydown="if(event.key==='Enter')addCar()" style="width:72px;background:var(--s2);border:1px solid var(--b2);border-radius:6px;padding:4px 7px;color:var(--tx);font-size:12px;font-family:var(--sans)"/>
+        <button class="btn-add" onclick="addCar()" style="padding:4px 10px;font-size:12px">+</button>
+      </div>
+    </div>
     <div class="cars-list" id="carsList"></div>
-    <div class="add-car-row">
-      <input type="text" id="nMake" placeholder="יצרן"/>
-      <input type="text" id="nModel" placeholder="דגם"/>
-      <button class="btn-add" onclick="addCar()">+ הוסף</button>
-    </div>
   </div>
 
-  <div class="section">
-    <div class="section-label">מנוע ציון (גלובלי)</div>
-    <div id="sliders"></div>
-    <div class="score-legend"><span style="color:var(--green)">█</span> אידיאלי &nbsp;<span style="color:var(--yellow)">█</span> סף צהוב &nbsp;<span style="color:var(--red)">█</span> קו אדום (פסילה)</div>
+  <div class="sec">
+    <div class="sec-lbl">תדירות סריקה</div>
+    <div class="f"><label>סרוק כל (דקות)</label><input type="number" id="intMin" value="720" min="10" max="1440" style="width:100%;background:var(--s2);border:1px solid var(--b2);border-radius:6px;padding:6px 9px;color:var(--tx);font-size:13px"/></div>
   </div>
 
-  <div class="section">
-    <div class="section-label">תדירות סריקה</div>
-    <div class="field"><label>סרוק כל (דקות)</label><input type="number" id="intMin" value="720" min="10" max="1440"/></div>
-  </div>
-
-  <div class="section" style="margin-top:auto">
-    <button class="btn-primary" id="startBtn" onclick="startMonitor()">▶ התחל ניטור</button>
+  <div class="sec" style="margin-top:auto">
+    <button class="btn-p" id="startBtn" onclick="startMonitor()">▶ התחל ניטור</button>
     <button class="btn-stop" id="stopBtn" onclick="stopMonitor()" style="display:none">■ עצור ניטור</button>
-    <button class="btn-sec" onclick="runAll()">⟳ סרוק עכשיו</button>
-    <div class="log-box" id="logBox">ממתין...</div>
+    <button class="btn-s" onclick="runAll()">⟳ סרוק עכשיו</button>
+    <div class="log" id="logBox">ממתין...</div>
   </div>
 </div>
 
 <div class="main">
   <div class="main-title">תוצאות</div>
   <div class="main-meta" id="meta">לא בוצעה סריקה עדיין</div>
-  <div class="filter-bar">
-    <button class="fchip active" onclick="setF('all',this)">הכל</button>
-    <button class="fchip" onclick="setF('high',this)">התאמה גבוהה</button>
-    <button class="fchip" onclick="setF('mid',this)">בינוני</button>
-    <button class="fchip" onclick="setF('low',this)">נמוך</button>
+  <div class="fbar">
+    <button class="fc active" onclick="setF('all',this)">הכל</button>
+    <button class="fc" onclick="setF('high',this)">גבוהה</button>
+    <button class="fc" onclick="setF('mid',this)">בינוני</button>
+    <button class="fc" onclick="setF('low',this)">נמוך</button>
   </div>
   <div id="results"><div class="empty"><div class="empty-icon">◉</div><div class="empty-text">הגדר רכבים והתחל ניטור</div></div></div>
 </div>
 
 </div>
 <script>
-// ── State ──
-let cars = [];
-let allResults = [], seenIds = new Set();
-let intervalId = null, activeFilter = 'all', scanCount = 0;
-
-// ── Sliders ──
-const PARAMS = [
-  { id:'price', label:'מחיר (₪)',     min:0,    max:200000, step:5000, yv:120000, rv:160000, fmt:v=>(v/1000).toFixed(0)+'K₪',    isYear:false },
-  { id:'km',    label:'קילומטרז\'',   min:0,    max:300000, step:5000, yv:150000, rv:220000, fmt:v=>(v/1000).toFixed(0)+'K ק"מ', isYear:false },
-  { id:'year',  label:'שנתון',        min:2005, max:2025,   step:1,    yv:2017,   rv:2014,   fmt:v=>String(v),                   isYear:true  },
-  { id:'hand',  label:'יד',           min:1,    max:8,      step:1,    yv:3,      rv:5,      fmt:v=>'יד '+v,                     isYear:false },
+// ── Slider definitions ──────────────────────────────────────────────────────
+const SDEF = [
+  { id:'price', lbl:'מחיר (₪)',   min:0,    max:200000, step:5000, defY:120000, defR:160000, fmt:v=>(v/1000).toFixed(0)+'K₪',    inv:false },
+  { id:'km',    lbl:'קילומטרז\'', min:0,    max:300000, step:5000, defY:150000, defR:220000, fmt:v=>(v/1000).toFixed(0)+'K ק"מ', inv:false },
+  { id:'year',  lbl:'שנתון',      min:2005, max:2025,   step:1,    defY:2017,   defR:2014,   fmt:v=>String(v),                   inv:true  },
+  { id:'hand',  lbl:'יד',         min:1,    max:8,      step:1,    defY:3,      defR:5,      fmt:v=>'יד '+v,                     inv:false },
 ];
 
-function buildSliders() {
-  document.getElementById('sliders').innerHTML = PARAMS.map(p => `
-    <div class="score-param">
-      <div class="score-ph">
-        <span class="pl">${p.label}</span>
-        <div class="ww"><span>משקל</span><input type="number" class="wi" id="w-${p.id}" value="${p.id==='price'?35:p.id==='km'?30:p.id==='year'?20:15}" min="0" max="100"/><span>%</span></div>
-      </div>
-      <div class="track" id="track-${p.id}">
-        <div class="tf g" id="tg-${p.id}"></div>
-        <div class="tf y" id="ty-${p.id}"></div>
-        <div class="tf r" id="tr-${p.id}"></div>
-        <div class="thumb ty" id="thy-${p.id}" onmousedown="drag(event,'${p.id}','y')" ontouchstart="drag(event,'${p.id}','y')"></div>
-        <div class="thumb tr" id="thr-${p.id}" onmousedown="drag(event,'${p.id}','r')" ontouchstart="drag(event,'${p.id}','r')"></div>
-      </div>
-      <div class="lbl-row"><span class="lbl ly" id="lbly-${p.id}"></span><span class="lbl lr" id="lblr-${p.id}"></span></div>
-    </div>`).join('');
-  PARAMS.forEach(drawSlider);
+function pct(v,d){ return Math.max(0,Math.min(100,(v-d.min)/(d.max-d.min)*100)); }
+function fromPct(p,d){ return Math.round((d.min+p/100*(d.max-d.min))/d.step)*d.step; }
+
+function sliderHTML(carIdx, d) {
+  const pfx = `s${carIdx}_${d.id}`;
+  return `<div class="isl" id="isl_${pfx}">
+    <div class="isl-head"><span class="isl-lbl">${d.lbl}</span></div>
+    <div class="track" id="track_${pfx}">
+      <div class="tf g" id="tg_${pfx}"></div>
+      <div class="tf y" id="ty_${pfx}"></div>
+      <div class="tf r" id="tr_${pfx}"></div>
+      <div class="thumb ty" id="thy_${pfx}" onmousedown="drag(event,${carIdx},'${d.id}','y')" ontouchstart="drag(event,${carIdx},'${d.id}','y')"></div>
+      <div class="thumb tr" id="thr_${pfx}" onmousedown="drag(event,${carIdx},'${d.id}','r')" ontouchstart="drag(event,${carIdx},'${d.id}','r')"></div>
+    </div>
+    <div class="lbl-row"><span class="lbl ly" id="lbly_${pfx}"></span><span class="lbl lr" id="lblr_${pfx}"></span></div>
+  </div>`;
 }
 
-function getP(id){ return PARAMS.find(p=>p.id===id); }
-function pct(v,p){ return Math.max(0,Math.min(100,(v-p.min)/(p.max-p.min)*100)); }
-function fromPct(pc,p){ return Math.round((p.min+pc/100*(p.max-p.min))/p.step)*p.step; }
-
-function drawSlider(p) {
-  const ypc=pct(p.yv,p), rpc=pct(p.rv,p);
-  const lo=Math.min(ypc,rpc), hi=Math.max(ypc,rpc);
-  const setF=(id,css)=>document.getElementById(id).style.cssText=css;
-  if(p.isYear){
-    setF('tr-'+p.id,`left:0%;width:${lo}%;border-radius:3px 0 0 3px`);
-    setF('ty-'+p.id,`left:${lo}%;width:${hi-lo}%`);
-    setF('tg-'+p.id,`left:${hi}%;width:${100-hi}%;border-radius:0 3px 3px 0`);
+function drawSlider(ci, did) {
+  const d = SDEF.find(x=>x.id===did);
+  const car = cars[ci];
+  if(!car) return;
+  const sc = car.scoring[did];
+  const pfx = `s${ci}_${did}`;
+  const yp = pct(sc.y, d), rp = pct(sc.r, d);
+  const lo = Math.min(yp,rp), hi = Math.max(yp,rp);
+  const g = id => document.getElementById(id);
+  if(!g('track_'+pfx)) return;
+  if(d.inv){
+    g('tr_'+pfx).style.cssText=`left:0%;width:${lo}%;border-radius:3px 0 0 3px`;
+    g('ty_'+pfx).style.cssText=`left:${lo}%;width:${hi-lo}%`;
+    g('tg_'+pfx).style.cssText=`left:${hi}%;width:${100-hi}%;border-radius:0 3px 3px 0`;
   } else {
-    setF('tg-'+p.id,`left:0%;width:${lo}%;border-radius:3px 0 0 3px`);
-    setF('ty-'+p.id,`left:${lo}%;width:${hi-lo}%`);
-    setF('tr-'+p.id,`left:${hi}%;width:${100-hi}%;border-radius:0 3px 3px 0`);
+    g('tg_'+pfx).style.cssText=`left:0%;width:${lo}%;border-radius:3px 0 0 3px`;
+    g('ty_'+pfx).style.cssText=`left:${lo}%;width:${hi-lo}%`;
+    g('tr_'+pfx).style.cssText=`left:${hi}%;width:${100-hi}%;border-radius:0 3px 3px 0`;
   }
-  document.getElementById('thy-'+p.id).style.left=ypc+'%';
-  document.getElementById('thr-'+p.id).style.left=rpc+'%';
-  const yl=document.getElementById('lbly-'+p.id), rl=document.getElementById('lblr-'+p.id);
-  yl.style.left=ypc+'%'; yl.textContent=p.fmt(p.yv);
-  rl.style.left=rpc+'%'; rl.textContent=p.fmt(p.rv);
-  const dist=Math.abs(ypc-rpc);
+  g('thy_'+pfx).style.left=yp+'%';
+  g('thr_'+pfx).style.left=rp+'%';
+  const yl=g('lbly_'+pfx), rl=g('lblr_'+pfx);
+  yl.style.left=yp+'%'; yl.textContent=d.fmt(sc.y);
+  rl.style.left=rp+'%'; rl.textContent=d.fmt(sc.r);
+  const dist=Math.abs(yp-rp);
   yl.style.top='0px';
-  rl.style.top=dist<15?'15px':'0px';
+  rl.style.top=dist<16?'15px':'0px';
 }
 
-let dragging=null;
-function drag(e,id,t){ e.preventDefault(); dragging={id,t}; document.addEventListener('mousemove',onDrag); document.addEventListener('mouseup',stopDrag); document.addEventListener('touchmove',onDrag,{passive:false}); document.addEventListener('touchend',stopDrag); }
-function onDrag(e){ if(!dragging)return; e.preventDefault(); const {id,t}=dragging; const p=getP(id); const rect=document.getElementById('track-'+id).getBoundingClientRect(); const cx=e.touches?e.touches[0].clientX:e.clientX; const pc=Math.max(0,Math.min(100,(rect.right-cx)/rect.width*100)); p[t+'v']=fromPct(pc,p); drawSlider(p); }
-function stopDrag(){ dragging=null; document.removeEventListener('mousemove',onDrag); document.removeEventListener('mouseup',stopDrag); document.removeEventListener('touchmove',onDrag); document.removeEventListener('touchend',stopDrag); }
-
-function getScoring(){
-  const r={};
-  PARAMS.forEach(p=>{ r[p.id]={weight:+(document.getElementById('w-'+p.id).value||0), yellow:p.yv, red:p.rv}; });
-  return r;
+function drawAllSliders(ci) {
+  SDEF.forEach(d => drawSlider(ci, d.id));
 }
 
-// ── API Key ──
+let dragging = null;
+function drag(e,ci,did,t){
+  e.preventDefault();
+  dragging={ci,did,t};
+  document.addEventListener('mousemove',onDrag);
+  document.addEventListener('mouseup',stopDrag);
+  document.addEventListener('touchmove',onDrag,{passive:false});
+  document.addEventListener('touchend',stopDrag);
+}
+function onDrag(e){
+  if(!dragging) return;
+  e.preventDefault();
+  const {ci,did,t} = dragging;
+  const d = SDEF.find(x=>x.id===did);
+  const pfx = `s${ci}_${did}`;
+  const rect = document.getElementById('track_'+pfx).getBoundingClientRect();
+  const cx = e.touches?e.touches[0].clientX:e.clientX;
+  const p = Math.max(0,Math.min(100,(rect.right-cx)/rect.width*100));
+  cars[ci].scoring[did][t] = fromPct(p,d);
+  drawSlider(ci,did);
+}
+function stopDrag(){
+  dragging=null;
+  document.removeEventListener('mousemove',onDrag);
+  document.removeEventListener('mouseup',stopDrag);
+  document.removeEventListener('touchmove',onDrag);
+  document.removeEventListener('touchend',stopDrag);
+}
+
+// ── State ───────────────────────────────────────────────────────────────────
+let cars = [];
+let allResults=[], seenIds=new Set(), intervalId=null, activeFilter='all', scanCount=0;
+
+function defaultScoring() {
+  const sc = {};
+  SDEF.forEach(d => { sc[d.id] = {y: d.defY, r: d.defR}; });
+  return sc;
+}
+
+// ── API Key ─────────────────────────────────────────────────────────────────
 function getKey(){ return document.getElementById('apiKey').value.trim(); }
 function onKey(){
   const k=getKey(), el=document.getElementById('apiSt');
-  if(!k){ el.innerHTML='הכנס מפתח — <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--accent);text-decoration:none">קבל חינמי ←</a>'; el.style.color='var(--text3)'; }
-  else if(k.length<20){ el.textContent='⚠ לא נראה תקין'; el.style.color='var(--yellow)'; }
-  else { el.textContent='✓ מפתח נטען'; el.style.color='var(--green)'; sessionStorage.setItem('gk',k); }
+  if(!k){ el.innerHTML='הכנס מפתח — <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--ac);text-decoration:none">קבל חינמי ←</a>'; el.style.color='var(--tx3)'; }
+  else if(k.length<20){ el.textContent='⚠ לא נראה תקין'; el.style.color='var(--yel)'; }
+  else { el.textContent='✓ מפתח נטען'; el.style.color='var(--grn)'; sessionStorage.setItem('gk',k); }
 }
 function toggleVis(){ const i=document.getElementById('apiKey'); i.type=i.type==='password'?'text':'password'; }
 
-// ── Cars ──
+// ── Cars ────────────────────────────────────────────────────────────────────
 function renderCars(){
   const el=document.getElementById('carsList');
-  if(!cars.length){ el.innerHTML='<div style="color:var(--text3);font-size:12px;font-family:var(--mono);margin-bottom:4px">אין רכבים עדיין</div>'; return; }
-  el.innerHTML=cars.map((c,i)=>{
-    const has=c.params&&Object.values(c.params).some(v=>v!==''&&v!=null);
+  if(!cars.length){ el.innerHTML='<div style="color:var(--tx3);font-size:12px;font-family:var(--mono);margin-bottom:4px">אין רכבים עדיין</div>'; return; }
+  el.innerHTML = cars.map((c,i) => {
     const p=c.params||{};
-    return `<div class="car-card${c._open?' open':''}" id="cc${i}">
-      <div class="car-head" onclick="toggleCar(${i})">
-        ${has?'<div class="override-dot"></div>':''}
-        <div class="car-name">${c.make} ${c.model}</div>
-        <span class="car-chevron">▼</span>
-        <button class="car-del" onclick="event.stopPropagation();delCar(${i})">×</button>
+    const hasParam = Object.values(p).some(v=>v!==''&&v!=null);
+    return `<div class="cc${c._open?' open':''}" id="cc${i}">
+      <div class="cc-head" onclick="toggleCar(${i})">
+        ${hasParam?'<div class="ov-dot"></div>':''}
+        <div class="cc-name">${c.make} ${c.model}</div>
+        <span class="cc-chev">▼</span>
+        <button class="cc-del" onclick="event.stopPropagation();delCar(${i})">×</button>
       </div>
-      <div class="car-body">
-        <div class="params-hint">ריק = ברירות מחדל משותפות</div>
-        <div class="field"><label>מחיר (₪)</label>
-          <div class="range-row">
+      <div class="cc-body">
+        <div class="params-hint">פרמטרי חיפוש</div>
+        <div class="f"><label>מחיר (₪)</label>
+          <div class="rr">
             <input type="number" placeholder="מינימום" value="${p.priceMin||''}" oninput="sp(${i},'priceMin',this.value)"/>
             <span>—</span>
             <input type="number" placeholder="מקסימום" value="${p.priceMax||''}" oninput="sp(${i},'priceMax',this.value)"/>
           </div></div>
-        <div class="field"><label>שנתון</label>
-          <div class="range-row">
+        <div class="f"><label>שנתון</label>
+          <div class="rr">
             <input type="number" placeholder="מ-" value="${p.yearMin||''}" oninput="sp(${i},'yearMin',this.value)"/>
             <span>—</span>
             <input type="number" placeholder="עד" value="${p.yearMax||''}" oninput="sp(${i},'yearMax',this.value)"/>
           </div></div>
-        <div class="field"><label>קילומטרז'</label>
-          <div class="range-row">
+        <div class="f"><label>קילומטרז'</label>
+          <div class="rr">
             <input type="number" placeholder="מ-" value="${p.kmMin||''}" oninput="sp(${i},'kmMin',this.value)"/>
             <span>—</span>
             <input type="number" placeholder="עד" value="${p.kmMax||''}" oninput="sp(${i},'kmMax',this.value)"/>
           </div></div>
-        <div class="field"><label>יד</label>
-          <div class="range-row">
+        <div class="f"><label>יד</label>
+          <div class="rr">
             <input type="number" placeholder="מ-" min="1" max="10" value="${p.handMin||''}" oninput="sp(${i},'handMin',this.value)"/>
             <span>—</span>
             <input type="number" placeholder="עד" min="1" max="10" value="${p.handMax||''}" oninput="sp(${i},'handMax',this.value)"/>
           </div></div>
-        <div class="field"><label>הערות ספציפיות</label>
+        <div class="f"><label>הערות</label>
           <input type="text" placeholder="אוטומטי, ללא תאונות..." value="${p.extra||''}" oninput="sp(${i},'extra',this.value)"/>
         </div>
+        <div style="font-size:10px;color:var(--tx3);font-family:var(--mono);margin:10px 0 8px">סף צהוב / קו אדום</div>
+        ${SDEF.map(d=>sliderHTML(i,d)).join('')}
+        <div class="sl-legend"><span style="color:var(--grn)">█</span> אידיאלי &nbsp;<span style="color:var(--yel)">█</span> צהוב &nbsp;<span style="color:var(--red)">█</span> קו אדום</div>
       </div>
     </div>`;
   }).join('');
+  // Draw sliders after DOM update
+  cars.forEach((_,i) => { if(cars[i]._open) drawAllSliders(i); });
 }
 
-function toggleCar(i){ cars[i]._open=!cars[i]._open; renderCars(); }
+function toggleCar(i){
+  cars[i]._open=!cars[i]._open;
+  renderCars();
+  if(cars[i]._open) drawAllSliders(i);
+}
 function sp(i,k,v){ if(!cars[i].params)cars[i].params={}; cars[i].params[k]=v; }
 function delCar(i){ cars.splice(i,1); renderCars(); }
 function addCar(){
   const make=document.getElementById('nMake').value.trim(), model=document.getElementById('nModel').value.trim();
   if(!make||!model){ showToast('הכנס יצרן ודגם'); return; }
-  const last=cars.length>0?{...cars[cars.length-1].params}:{};
-  cars.push({make,model,params:last,_open:false});
+  const lastScoring = cars.length>0 ? JSON.parse(JSON.stringify(cars[cars.length-1].scoring)) : defaultScoring();
+  const lastParams = cars.length>0 ? {...cars[cars.length-1].params} : {};
+  cars.push({make,model,params:lastParams,scoring:lastScoring,_open:false});
   document.getElementById('nMake').value='';
   document.getElementById('nModel').value='';
   renderCars();
 }
 
-// ── Prompt ──
-function buildPrompt(make,model,p,sc){
+// ── Prompt ──────────────────────────────────────────────────────────────────
+function buildPrompt(make,model,p,sc,weights){
   const lines=[];
   if(p.priceMin||p.priceMax) lines.push(`מחיר: ${p.priceMin||'0'} - ${p.priceMax||'ללא הגבלה'} ₪`);
   if(p.yearMin||p.yearMax) lines.push(`שנתון: ${p.yearMin||'ללא מינימום'} - ${p.yearMax||'ללא מקסימום'}`);
   if(p.kmMin||p.kmMax) lines.push(`קילומטרז': ${p.kmMin||'0'} - ${p.kmMax||'ללא הגבלה'} ק"מ`);
   if(p.handMin||p.handMax) lines.push(`יד: ${p.handMin||'1'} - ${p.handMax||'ללא הגבלה'}`);
   if(p.extra) lines.push(`דרישות: ${p.extra}`);
-  const totalW=Object.values(sc).reduce((s,v)=>s+v.weight,0)||100;
-  const priceY=getP('price').yv, priceR=getP('price').rv;
-  const kmY=getP('km').yv, kmR=getP('km').rv;
-  const yearY=getP('year').yv, yearR=getP('year').rv;
-  const handY=getP('hand').yv, handR=getP('hand').rv;
-
+  const totalW=Object.values(weights).reduce((s,v)=>s+v,0)||100;
   return `אתה מנוע חיפוש רכבי יד שנייה ישראלי מקצועי.
 
-משימה: חפש באתר yad2.co.il מודעות למכירת ${make} ${model}.
-השתמש בכלי החיפוש שלך עם השאילתה: site:yad2.co.il/vehicles/cars ${make} ${model}
-וגם: yad2.co.il רכבים ${make} ${model} למכירה
+חפש ב-yad2.co.il מודעות מכירת ${make} ${model}.
+שאילתות חיפוש: "site:yad2.co.il/vehicles/cars ${make} ${model}" וגם "yad2 ${make} ${model} מכירה"
 
 פרמטרי חיפוש:
-${lines.length?lines.join('\n'):'אין מגבלות ספציפיות — הצג את הטובות ביותר'}
+${lines.length?lines.join('\n'):'ללא מגבלות — הצג את הטובות ביותר'}
 
-חישוב ציון 0-100 לכל מודעה:
-• מחיר (${sc.price.weight}% מהציון): האידיאל = הכי זול. ציון = 100 × (1 - מחיר / ${priceR.toLocaleString()}). קו אדום: מעל ${priceR.toLocaleString()} ₪ → פסול לחלוטין.
-• ק"מ (${sc.km.weight}%): האידיאל = 0. ציון = 100 × (1 - ק"מ / ${kmR.toLocaleString()}). קו אדום: מעל ${kmR.toLocaleString()} ק"מ → פסול.
-• שנתון (${sc.year.weight}%): האידיאל = 2025. ציון = 100 × (שנה - 2005) / 20. קו אדום: לפני ${yearR} → פסול.
-• יד (${sc.hand.weight}%): האידיאל = יד 1. ציון = 100 × (1 - (יד-1)/7). קו אדום: יד ${handR}+ → פסול.
-ציון סופי = ממוצע משוקלל / ${totalW} × 100.
-אם חצה קו אדום → אל תכלול.
+ציון 0-100 לכל מודעה (ממוצע משוקלל, סה"כ ${totalW}%):
+• מחיר (${weights.price}%): האידיאל=הכי זול. ציון=100×(1-מחיר/${sc.price.r.toLocaleString()}). קו אדום: מעל ${sc.price.r.toLocaleString()}₪ → פסול. סף צהוב: ${sc.price.y.toLocaleString()}₪.
+• ק"מ (${weights.km}%): האידיאל=0. ציון=100×(1-ק"מ/${sc.km.r.toLocaleString()}). קו אדום: מעל ${sc.km.r.toLocaleString()} → פסול. סף צהוב: ${sc.km.y.toLocaleString()}.
+• שנתון (${weights.year}%): האידיאל=2025. ציון=100×(שנה-2005)/20. קו אדום: לפני ${sc.year.r} → פסול. סף צהוב: ${sc.year.y}.
+• יד (${weights.hand}%): האידיאל=יד 1. ציון=100×(1-(יד-1)/7). קו אדום: יד ${sc.hand.r}+ → פסול. סף צהוב: יד ${sc.hand.y}.
+דגלים: ok=בטווח הירוק, yellow=עבר סף אזהרה, red=עבר קו אדום (אבל עדיין לא פסול לחלוטין, הציון יהיה נמוך).
 
-דגלים: ok = בתוך הטווח הירוק, yellow = סף אזהרה (מחיר>${priceY.toLocaleString()}, ק"מ>${kmY.toLocaleString()}, שנה<${yearY}, יד${handY}+), red = חרג.
-
-החזר JSON בלבד — ללא backticks, ללא הסברים, ללא טקסט לפני/אחרי:
-{"listings":[{"id":"${make}_${model}_<price>_<year>","title":"כותרת המודעה כפי שמופיעה ביד2","make":"${make}","model":"${model}","price":<מספר שלם>,"year":<מספר שלם>,"km":<מספר שלם>,"hand":<מספר שלם>,"location":"עיר","url":"https://www.yad2.co.il/vehicles/cars/...","score":<0-100>,"scoreLabel":"high|mid|low","priceFlag":"ok|yellow|red","kmFlag":"ok|yellow|red","yearFlag":"ok|yellow|red","handFlag":"ok|yellow|red","notes":"2-3 משפטים בעברית: מה טוב, האם המחיר הגיוני ביחס לשוק, מה לבדוק"}]}
-high=75+, mid=50-74, low=<50. החזר 3-5 מודעות. אם אין תוצאות מדויקות — הצג קרובות עם ציון נמוך.`;
+החזר JSON בלבד ללא backticks:
+{"listings":[{"id":"${make}_${model}_PRICE_YEAR","title":"כותרת","make":"${make}","model":"${model}","price":NUMBER,"year":NUMBER,"km":NUMBER,"hand":NUMBER,"location":"עיר","url":"https://www.yad2.co.il/vehicles/cars/...","score":NUMBER,"scoreLabel":"high|mid|low","priceFlag":"ok|yellow|red","kmFlag":"ok|yellow|red","yearFlag":"ok|yellow|red","handFlag":"ok|yellow|red","notes":"2-3 משפטים: יתרונות, האם המחיר הגיוני, מה לבדוק"}]}
+high=75+, mid=50-74, low=<50. החזר 3-5 מודעות. אם אין תוצאות — החזר הקרובות ביותר עם ציון נמוך.`;
 }
 
-// ── Scan ──
-function log(msg){ const el=document.getElementById('logBox'); const t=new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'}); el.innerHTML=`<span style="color:var(--text3)">[${t}]</span> ${msg}\n`+el.innerHTML; }
-function setStatus(s,txt){ document.getElementById('spill').className='status-pill '+s; document.getElementById('stxt').textContent=txt; document.getElementById('sdot').className='dot'+(s!=='idle'?' pulse':''); }
+// ── Log / Status / Toast ─────────────────────────────────────────────────────
+function addLog(msg){ const el=document.getElementById('logBox'); const t=new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'}); el.innerHTML=`<span style="color:var(--tx3)">[${t}]</span> ${msg}\n`+el.innerHTML; }
+function setStatus(s,txt){ document.getElementById('spill').className='spill '+s; document.getElementById('stxt').textContent=txt; document.getElementById('sdot').className='dot'+(s!=='idle'?' pulse':''); }
 function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3500); }
 
-async function scanOne(make,model,params,sc){
+function validateWeights(){
+  const ids=['w-price','w-km','w-year','w-hand'];
+  const total=ids.reduce((s,id)=>s+(+(document.getElementById(id).value)||0),0);
+  const el=document.getElementById('w-total');
+  if(total===100){ el.textContent='סה"כ: 100% ✓'; el.style.color='var(--grn)'; }
+  else if(total<100){ el.textContent=`סה"כ: ${total}% (חסר ${100-total}%)`; el.style.color='var(--yel)'; }
+  else { el.textContent=`סה"כ: ${total}% ⚠ חורג מ-100`; el.style.color='var(--red)'; }
+}
+
+function getWeights(){
+  return {
+    price:+(document.getElementById('w-price').value||0),
+    km:+(document.getElementById('w-km').value||0),
+    year:+(document.getElementById('w-year').value||0),
+    hand:+(document.getElementById('w-hand').value||0)
+  };
+}
+
+// ── Token tracking ────────────────────────────────────────────────────────────
+let tokensUsedToday = 0;
+const DAILY_LIMIT = 1000000;
+const TOKEN_KEY = 'gk_tokens_' + new Date().toDateString();
+
+function loadTokens(){
+  const saved = sessionStorage.getItem(TOKEN_KEY);
+  if(saved) tokensUsedToday = parseInt(saved)||0;
+  updateTokenDisplay();
+}
+function addTokens(n){
+  tokensUsedToday += n;
+  sessionStorage.setItem(TOKEN_KEY, tokensUsedToday);
+  updateTokenDisplay();
+}
+function updateTokenDisplay(){
+  const el = document.getElementById('tokenDisplay');
+  if(!el) return;
+  const used = tokensUsedToday;
+  const pct = Math.min(100, used/DAILY_LIMIT*100);
+  const usedK = used >= 1000 ? (used/1000).toFixed(1)+'K' : used;
+  const limitK = '1M';
+  let color = 'var(--tx3)';
+  if(pct > 80) color = 'var(--red)';
+  else if(pct > 50) color = 'var(--yel)';
+  el.innerHTML = `<span style="color:${color}">טוקנים: ${usedK} / ${limitK}</span>`;
+}
+
+// ── Scan ─────────────────────────────────────────────────────────────────────
+async function scanOne(car){
   const key=getKey();
+  const weights=getWeights();
   try{
     const resp=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,{
-      method:'POST', headers:{'Content-Type':'application/json'},
+      method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        contents:[{parts:[{text:buildPrompt(make,model,params,sc)}]}],
+        contents:[{parts:[{text:buildPrompt(car.make,car.model,car.params||{},car.scoring,weights)}]}],
         tools:[{google_search:{}}],
         generationConfig:{temperature:0.1,maxOutputTokens:2000}
       })
     });
     const data=await resp.json();
-    if(data.error){ log(`שגיאה (${make} ${model}): ${data.error.message}`); return []; }
+    if(data.error){ addLog(`שגיאה (${car.make} ${car.model}): ${data.error.message}`); return []; }
+    const usage = data.usageMetadata;
+    if(usage) addTokens((usage.promptTokenCount||0)+(usage.candidatesTokenCount||0));
     const text=(data.candidates?.[0]?.content?.parts||[]).map(p=>p.text||'').join('');
     const m=text.match(/\{[\s\S]*\}/);
-    if(!m){ log(`אין JSON עבור ${make} ${model}`); return []; }
+    if(!m){ addLog(`אין JSON עבור ${car.make} ${car.model}`); return []; }
     const parsed=JSON.parse(m[0]);
     return (parsed.listings||[]).map(l=>({...l,scannedAt:new Date().toISOString(),isNew:!seenIds.has(l.id)}));
-  } catch(e){ log(`שגיאת רשת: ${e.message}`); return []; }
+  } catch(e){ addLog(`שגיאת רשת: ${e.message}`); return []; }
 }
 
 async function runAll(){
   if(!cars.length){ showToast('הוסף לפחות רכב אחד'); return; }
   if(!getKey()){ showToast('הכנס מפתח API'); return; }
-  const sc=getScoring();
   scanCount++;
   setStatus('scanning',`סורק ${cars.length} רכבים...`);
-  log(`סריקה #${scanCount} — ${cars.length} רכבים במקביל`);
-  const results=await Promise.all(cars.map(c=>scanOne(c.make,c.model,c.params||{},sc)));
+  addLog(`סריקה #${scanCount} — ${cars.length} רכבים`);
+  const results=await Promise.all(cars.map(c=>scanOne(c)));
   const flat=results.flat();
   let newCount=0;
   flat.forEach(l=>{ if(!seenIds.has(l.id)){ seenIds.add(l.id); allResults.unshift(l); newCount++; } });
-  log(`${flat.length} מודעות, ${newCount} חדשות`);
+  addLog(`${flat.length} מודעות, ${newCount} חדשות`);
   if(newCount>0){ showToast(`${newCount} מודעות חדשות!`); if('Notification' in window&&Notification.permission==='granted') new Notification('יד2 Scout',{body:`${newCount} מודעות חדשות`}); }
   document.getElementById('meta').textContent=`${allResults.length} מודעות סה"כ · סריקה אחרונה: ${new Date().toLocaleTimeString('he-IL')}`;
   setStatus(intervalId?'active':'idle', intervalId?`פעיל · כל ${document.getElementById('intMin').value} דק'`:'ממתין');
@@ -436,9 +537,9 @@ function startMonitor(){
   document.getElementById('stopBtn').style.display='block';
   if('Notification' in window) Notification.requestPermission();
 }
-function stopMonitor(){ clearInterval(intervalId); intervalId=null; document.getElementById('startBtn').style.display='block'; document.getElementById('stopBtn').style.display='none'; setStatus('idle','כבוי'); log('ניטור הופסק'); }
+function stopMonitor(){ clearInterval(intervalId); intervalId=null; document.getElementById('startBtn').style.display='block'; document.getElementById('stopBtn').style.display='none'; setStatus('idle','כבוי'); addLog('ניטור הופסק'); }
 
-function setF(f,el){ activeFilter=f; document.querySelectorAll('.fchip').forEach(c=>c.classList.remove('active')); el.classList.add('active'); renderResults(); }
+function setF(f,el){ activeFilter=f; document.querySelectorAll('.fc').forEach(c=>c.classList.remove('active')); el.classList.add('active'); renderResults(); }
 
 function renderResults(){
   const el=document.getElementById('results');
@@ -450,8 +551,8 @@ function renderResults(){
     const fg=f=>f==='ok'?'g':f==='yellow'?'w':'';
     return `<div class="rc ${sc}">
       <div class="rc-top">
-        <div><div class="rc-title">${l.isNew?'<span class="nb">חדש</span>':''}${l.title}</div><div class="rc-tag">${l.make} ${l.model}</div></div>
-        <div style="text-align:center"><div class="snum ${sc}">${l.score}</div><div class="slbl">/100</div></div>
+        <div><div class="rc-title">${l.isNew?'<span class="nb">חדש</span>':''}${l.title||l.make+' '+l.model}</div><div class="rc-tag">${l.make} ${l.model}</div></div>
+        <div style="text-align:center"><div class="snum ${sc}">${l.score}</div><div class="slbl-s">/100</div></div>
       </div>
       <div class="chips">
         ${l.price!=null?`<span class="ch ${fg(l.priceFlag)}">₪ ${Number(l.price).toLocaleString('he-IL')}</span>`:''}
@@ -467,12 +568,12 @@ function renderResults(){
   }).join('');
 }
 
-// ── Init ──
+// ── Init ─────────────────────────────────────────────────────────────────────
 (function init(){
-  buildSliders();
+  loadTokens();
   const saved=sessionStorage.getItem('gk');
   if(saved){ document.getElementById('apiKey').value=saved; onKey(); }
-  cars=[{make:'טויוטה',model:'קורולה',params:{},_open:false}];
+  cars=[{make:'טויוטה',model:'קורולה',params:{},scoring:defaultScoring(),_open:false}];
   renderCars();
 })();
 </script>
